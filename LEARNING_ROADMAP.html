@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Agent / RAG / LLM 学习路线 — Java 程序员的转型指南</title>
+  <style>
+    :root {
+      --bg:        #0f1117;
+      --surface:   #1a1d27;
+      --surface2:  #24283b;
+      --border:    #2d3348;
+      --primary:   #7c6af7;
+      --primary2:  #6ee7b7;
+      --accent:    #fb7185;
+      --accent2:   #facc15;
+      --text:      #e2e8f0;
+      --text-dim:  #64748b;
+      --green:     #4ade80;
+      --blue:      #60a5fa;
+      --orange:    #fb923c;
+      --r:         0.5rem;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ─── Layout ─── */
+    .container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+    /* ─── Header ─── */
+    .header {
+      text-align: center;
+      padding: 3rem 0 2rem;
+    }
+    .header .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--primary), var(--primary2));
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 99px;
+      margin-bottom: 1rem;
+    }
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary2), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    .header p { color: var(--text-dim); font-size: 0.95rem; }
+
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--primary2);
+    }
+    .stat-label { font-size: 0.75rem; color: var(--text-dim); }
+
+    /* ─── Philosophy Banner ─── */
+    .philosophy {
+      background: linear-gradient(135deg, #1e1244, #0f3d3d);
+      border: 1px solid var(--primary);
+      border-radius: var(--r);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    .philosophy h3 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--primary2);
+      margin-bottom: 0.5rem;
+    }
+    .philosophy p { font-size: 0.88rem; color: var(--text); line-height: 1.7; }
+    .phil-dont { border-left: 3px solid var(--accent); padding-left: 1rem; }
+    .phil-do   { border-left: 3px solid var(--green);   padding-left: 1rem; }
+
+    /* ─── Week Card ─── */
+    .week-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .week-card:hover { border-color: var(--primary); }
+
+    .week-header {
+      display: flex;
+      align-items: center;
+      padding: 1rem 1.25rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .week-num {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      margin-right: 1rem;
+    }
+    .week-info { flex: 1; }
+    .week-title { font-weight: 700; font-size: 1rem; }
+    .week-subtitle { font-size: 0.78rem; color: var(--text-dim); }
+    .week-hours {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      background: var(--surface2);
+      padding: 0.2rem 0.6rem;
+      border-radius: 99px;
+    }
+    .week-toggle {
+      width: 1.5rem;
+      height: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      transition: transform 0.3s;
+    }
+    .week-card.open .week-toggle { transform: rotate(180deg); }
+
+    .week-body {
+      display: none;
+      padding: 0 1.25rem 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+    .week-card.open .week-body { display: block; }
+
+    /* ─── Days ─── */
+    .days-list { margin-top: 1rem; }
+
+    .day-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .day-row:last-child { border-bottom: none; }
+
+    .day-dot {
+      width: 1.8rem;
+      height: 1.8rem;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .day-dot.done {
+      background: var(--green);
+      border-color: var(--green);
+      color: #000;
+    }
+    .day-dot:hover { transform: scale(1.15); }
+
+    .day-content { flex: 1; }
+    .day-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+    .day-desc { font-size: 0.8rem; color: var(--text-dim); line-height: 1.5; }
+
+    .day-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.4rem; }
+    .tag {
+      font-size: 0.65rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 99px;
+      font-weight: 600;
+    }
+    .tag-concept  { background: #1e3a5f; color: var(--blue); }
+    .tag-code     { background: #1a2e1a; color: var(--green); }
+    .tag-project  { background: #2e1a3a; color: var(--primary2); }
+    .tag-reading  { background: #3a2e1a; color: var(--orange); }
+
+    .day-time {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      white-space: nowrap;
+      margin-top: 0.2rem;
+    }
+
+    /* ─── Project Milestones ─── */
+    .milestone-section { margin-top: 0.5rem; }
+
+    .milestone-header {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary2);
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .milestone-header::before {
+      content: '';
+      width: 3px;
+      height: 1rem;
+      background: var(--primary2);
+      border-radius: 2px;
+    }
+
+    .milestone-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    .milestone-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 0.75rem;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
+    .milestone-item .m-title {
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+
+    .milestone-item .m-desc { color: var(--text-dim); font-size: 0.75rem; }
+    .milestone-item .m-file { color: var(--blue); font-size: 0.72rem; }
+
+    /* ─── Feedback System ─── */
+    .feedback {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 1.25rem;
+      margin: 2rem 0;
+    }
+    .feedback h2 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--primary2);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .feedback-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.75rem;
+    }
+    .fb-item {
+      background: var(--surface2);
+      border-radius: var(--r);
+      padding: 0.75rem;
+      text-align: center;
+    }
+    .fb-icon { font-size: 1.5rem; margin-bottom: 0.3rem; }
+    .fb-label { font-size: 0.75rem; color: var(--text-dim); }
+    .fb-desc  { font-size: 0.72rem; color: var(--text-dim); margin-top: 0.2rem; }
+
+    /* ─── Tech Stack ─── */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .tech-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 1rem;
+    }
+    .tech-name { font-weight: 700; font-size: 0.88rem; margin-bottom: 0.3rem; }
+    .tech-java { border-left: 3px solid #f97316; }
+    .tech-ai   { border-left: 3px solid var(--primary2); }
+    .tech-hub  { border-left: 3px solid var(--blue); }
+
+    /* ─── Checklist ─── */
+    .checklist { margin-top: 1.5rem; }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+    .check-item input[type="checkbox"] {
+      width: 1rem;
+      height: 1rem;
+      accent-color: var(--primary2);
+      cursor: pointer;
+    }
+
+    /* ─── Section Title ─── */
+    .section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      margin: 2rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 600px) {
+      .philosophy { grid-template-columns: 1fr; }
+      .stats-bar  { gap: 1rem; }
+      .milestone-grid { grid-template-columns: 1fr; }
+      .tech-grid  { grid-template-columns: 1fr; }
+    }
+
+    /* ─── Print-friendly ─── */
+    @media print {
+      body { background: #fff; color: #000; }
+      .day-dot { border-color: #999; }
+      .day-dot.done { background: #000; color: #fff; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ═══════════ HEADER ═══════════ -->
+  <div class="header">
+    <div class="badge">60 小时 · Java → AI 工程师</div>
+    <h1>AI Agent / RAG / LLM<br>转型学习路线</h1>
+    <p>以 NL2SQL BI Agent 项目为载体，每天 2 小时，持续正反馈，4 周完成蜕变</p>
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-num">4</div>
+        <div class="stat-label">周学习周期</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">60h</div>
+        <div class="stat-label">总学习时长</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4</div>
+        <div class="stat-label">阶段性项目里程碑</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">12+</div>
+        <div class="stat-label">可提交到简历的项目</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ PHILOSOPHY ═══════════ -->
+  <div class="philosophy">
+    <div class="phil-do">
+      <h3>✅ 推荐做法</h3>
+      <p>以 <strong>NL2SQL BI Agent</strong> 为锚点，每学一个知识点，立即在这个项目里改一处代码。每天都能看到项目变好。</p>
+      <p style="margin-top:0.6rem">学的就是用的，用的就是练的。用输出倒逼输入，用正反馈维持动力。</p>
+    </div>
+    <div class="phil-dont">
+      <h3>❌ 避免做法</h3>
+      <p>先刷完所有视频/文档再动手——你会发现前学后忘，没有肌肉记忆。</p>
+      <p style="margin-top:0.6rem">不追求「完整掌握」再行动：先跑通，再理解，最后优化。学习曲线要短，成就感要快。</p>
+    </div>
+  </div>
+
+  <!-- ═══════════ 正反馈系统 ═══════════ -->
+  <div class="feedback">
+    <h2>⚡ 每日正反馈机制</h2>
+    <div class="feedback-grid">
+      <div class="fb-item">
+        <div class="fb-icon">🔁</div>
+        <div class="fb-label">每日代码提交</div>
+        <div class="fb-desc">git commit — 哪怕只改了 README 或加了一行注释</div>
+      </div>
+      <div class="fb-item">
+        <div class="fb-icon">📝</div>
+        <div class="fb-label">每日学习笔记</div>
+        <div class="fb-desc">用 Obsidian/飞书记录，200 字即可，重在总结</div>
+      </div>
+      <div class="fb-item">
+        <div class="fb-icon">🤖</div>
+        <div class="fb-label">每日 1 次提问实验</div>
+        <div class="fb-desc">用项目跑通一个新问题，观察 SQL / 图表变化</div>
+      </div>
+      <div class="fb-item">
+        <div class="fb-icon">📊</div>
+        <div class="fb-label">DEBUG_LOG.md 追加</div>
+        <div class="fb-desc">每解决一个问题记录下来，形成自己的知识库</div>
+      </div>
+      <div class="fb-item">
+        <div class="fb-icon">🏆</div>
+        <div class="fb-label">里程碑庆祝</div>
+        <div class="fb-desc">每完成一周，给自己一个小奖励</div>
+      </div>
+      <div class="fb-item">
+        <div class="fb-icon">📱</div>
+        <div class="fb-label">每周分享</div>
+        <div class="fb-desc">对朋友/同事讲一遍，讲不清楚 = 没学会</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ TECH BRIDGES ═══════════ -->
+  <div class="section-title">技术桥梁 · Java → AI</div>
+  <div class="tech-grid">
+    <div class="tech-item tech-java">
+      <div class="tech-name">你的 Java 经验</div>
+      <div style="font-size:0.78rem; color:var(--text-dim)">OOP / 设计模式<br>Spring IoC → 理解 Agent 编排<br>REST API → SSE 流式接口<br>JPA/Hibernate → SQLAlchemy</div>
+    </div>
+    <div class="tech-item tech-ai">
+      <div class="tech-name">AI 新技能</div>
+      <div style="font-size:0.78rem; color:var(--text-dim)">LLM API 调用<br>Prompt Engineering<br>RAG（检索增强生成）<br>LangGraph 状态机</div>
+    </div>
+    <div class="tech-item tech-hub">
+      <div class="tech-name">快速工具链</div>
+      <div style="font-size:0.78rem; color:var(--text-dim)">Ollama（本地跑模型）<br>Milvus Lite（零配置向量库）<br>FastAPI（Python Web 框架）<br>Cursor AI（编码助手）</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ WEEK 1 ═══════════ -->
+  <div class="section-title">📅 学习计划</div>
+
+  <div class="week-card open" id="week1">
+    <div class="week-header" onclick="toggleWeek('week1')">
+      <div class="week-num">W1</div>
+      <div class="week-info">
+        <div class="week-title">Week 1 · Python 速通 + LLM API 初体验</div>
+        <div class="week-subtitle">目标：跑通项目，理解 LLM 如何「听话」</div>
+      </div>
+      <div class="week-hours">14 天 · 2h/d</div>
+      <div class="week-toggle">▼</div>
+    </div>
+    <div class="week-body">
+      <div class="days-list">
+
+        <!-- Day 1 -->
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">1</div>
+          <div>
+            <div class="day-title">环境搭建 + 跑通第一个 LLM 调用</div>
+            <div class="day-desc">安装 Python 3.10+，用 OpenAI SDK（或 Ollama）发一条 API 调用，理解 Completion vs Chat 接口。尝试换不同的 system prompt 观察回答差异。</div>
+            <div class="day-tags">
+              <span class="tag tag-code">安装配置</span>
+              <span class="tag tag-concept">LLM API</span>
+            </div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <!-- Day 2 -->
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">2</div>
+          <div>
+            <div class="day-title">Python 核心语法（Java 程序员重点）</div>
+            <div class="day-desc">重点学：装饰器、上下文管理器（with）、异步（async/await）、字典/列表推导式。类比 Java：@注解 → Python @decorator；Spring Bean → Python 单例；接口 → Protocol。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">Python 语法</span>
+              <span class="tag tag-code">对比学习</span>
+            </div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <!-- Day 3 -->
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">3</div>
+          <div>
+            <div class="day-title">Prompt Engineering 核心原则</div>
+            <div class="day-desc">学习 5 大原则：明确性、分解任务、Few-shot 示例、角色设定、输出格式约束。在项目中修改 SYSTEM_PROMPT，看效果差异。重点：LLM 不是「思考」，是「模式补全」。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">Prompt 工程</span>
+              <span class="tag tag-project">nl2sql_agent.py</span>
+            </div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <!-- Day 4 -->
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">4</div>
+          <div>
+            <div class="day-title">理解 Embedding：让 AI 读懂语义</div>
+            <div class="day-desc">理解 Embedding 本质：把文本转成向量，语义相似 → 向量相近。学习使用 OpenAI/HuggingFace 的 embedding 接口。在项目中找到 <code>embedding.py</code>，理解它如何把 Schema 转成向量存入 Milvus。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">Embedding 原理</span>
+              <span class="tag tag-project">embedding.py</span>
+            </div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <!-- Day 5 -->
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">5</div>
+          <div>
+            <div class="day-title">向量数据库：Milvus / ChromaDB</div>
+            <div class="day-desc">理解为什么需要向量数据库（海量向量快速相似搜索）。Milvus Lite 是零配置版本，正好适合学习。跑通项目的 RAG 检索流程：用户问题 → Embedding → Milvus 查询 → 返回上下文。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">向量数据库</span>
+              <span class="tag tag-project">retriever.py</span>
+            </div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <!-- Day 6 -->
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">6</div>
+          <div>
+            <div class="day-title">RAG 核心原理 + 项目检索链路分析</div>
+            <div class="day-desc">完整走一遍项目 RAG 流程：问题 → Embed → 向量检索 → 上下文组装 → LLM 生成。找到 <code>retriever.py</code> 中的三路检索（Schema + 指标 + SQL 示例），理解各自的作用。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">RAG 原理</span>
+              <span class="tag tag-project">retriever.py</span>
+            </div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <!-- Day 7 -->
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">7</div>
+          <div>
+            <div class="day-title">Week1 总结 + 在项目中加一个小功能</div>
+            <div class="day-desc">建议加一个功能：在 RAG 检索时打印命中的 Schema 片段（方便调试）。这周学到的核心：LLM 是「模式补全」，Embedding 是「语义匹配」，RAG 是「给 LLM 喂正确上下文」。</div>
+            <div class="day-tags">
+              <span class="tag tag-project">实践</span>
+              <span class="tag tag-reading">周总结</span>
+            </div>
+            <div class="day-time">⏱ ~2h · 里程碑</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="milestone-section">
+        <div class="milestone-header">🏆 Week1 项目里程碑</div>
+        <div class="milestone-grid">
+          <div class="milestone-item">
+            <div class="m-title">跑通完整查询流程</div>
+            <div class="m-desc">从前端提问到看到图表，全链路跑通，理解数据流向</div>
+          </div>
+          <div class="milestone-item">
+            <div class="m-title">改一处 Prompt 看效果</div>
+            <div class="m-desc">修改 SYSTEM_PROMPT，让生成的 SQL 更准确，观察差异</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ WEEK 2 ═══════════ -->
+  <div class="week-card" id="week2">
+    <div class="week-header" onclick="toggleWeek('week2')">
+      <div class="week-num">W2</div>
+      <div class="week-info">
+        <div class="week-title">Week 2 · LangGraph 状态机 + Agent 核心概念</div>
+        <div class="week-subtitle">目标：理解 Agent 如何「编排」思考步骤</div>
+      </div>
+      <div class="week-hours">14 天 · 2h/d</div>
+      <div class="week-toggle">▼</div>
+    </div>
+    <div class="week-body">
+      <div class="days-list">
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">1</div>
+          <div>
+            <div class="day-title">理解 Agent 本质：循环 + 工具 + 记忆</div>
+            <div class="day-desc">Agent = LLM + 工具（Tool）+ 循环（Loop）+ 记忆（Memory）。用 Java 类比：Agent 像一个 Spring Bean，根据用户请求（State）决定下一步做什么（路由），每个步骤是一个 Service。</div>
+            <div class="day-tags"><span class="tag tag-concept">Agent 原理</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">2</div>
+          <div>
+            <div class="day-title">LangGraph 状态机：概念入门</div>
+            <div class="day-desc">理解 StateGraph、Node、Edge、ConditionalEdge。用生活类比：状态机就像餐厅流程：接单 → 做菜 → 上菜 → 结账，每步有固定动作，失败时回到上一步。重点：它解决了「Agent 步骤编排」的问题。</div>
+            <div class="day-tags"><span class="tag tag-concept">LangGraph</span><span class="tag tag-project">nl2sql_agent.py</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">3</div>
+          <div>
+            <div class="day-title">深度阅读 nl2sql_agent.py 状态图</div>
+            <div class="day-desc">对照代码画出完整状态图：classify_intent → retrieve → generate → validate → execute → chart。理解每个节点的输入/输出，以及 state 是如何在节点间传递的。重点：State 类型定义。</div>
+            <div class="day-tags"><span class="tag tag-code">代码阅读</span><span class="tag tag-project">nl2sql_agent.py</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">4</div>
+          <div>
+            <div class="day-title">Self-Correction 循环：让 Agent 自我纠错</div>
+            <div class="day-desc">今天学的核心：EXPLAIN 校验 + 重试机制，这是 Agent 自我纠错的经典模式。在项目中找到 <code>_route_after_validation</code> 和 <code>_route_after_execution</code>，理解失败时如何回到生成节点。</div>
+            <div class="day-tags"><span class="tag tag-concept">Self-Correction</span><span class="tag tag-project">重试逻辑</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">5</div>
+          <div>
+            <div class="day-title">SQL Executor：数据库连接 + SQL 注入防护</div>
+            <div class="day-desc">理解 SQLAlchemy 的 text() 防注入机制（参数化查询）。对比 Java JDBC 的 PreparedStatement，两者原理一致。在项目中找到 <code>sql_executor.py</code>，理解 execute 和 validate_with_explain 的区别。</div>
+            <div class="day-tags"><span class="tag tag-code">数据库</span><span class="tag tag-project">sql_executor.py</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">6</div>
+          <div>
+            <div class="day-title">流式输出 SSE：FastAPI + Server-Sent Events</div>
+            <div class="day-desc">理解 SSE 和 WebSocket 的区别（SSE 单向，服务→客户端推送）。在项目中找到 <code>routes.py</code> 的 /query/stream 接口，对比 Java 的 Flux / SSE 实现。</div>
+            <div class="day-tags"><span class="tag tag-concept">SSE</span><span class="tag tag-project">routes.py</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">7</div>
+          <div>
+            <div class="day-title">Week2 总结 + 给 Agent 加一个新节点</div>
+            <div class="day-desc">建议：在状态图中加一个「结果解释」节点，用 LLM 生成自然语言总结分析本次查询结果（类似 ChatBI 的解释能力）。这周核心：Agent = 状态机 + 工具调用 + 自我纠错。</div>
+            <div class="day-tags"><span class="tag tag-project">实践</span><span class="tag tag-reading">周总结</span></div>
+            <div class="day-time">⏱ ~2h · 里程碑</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="milestone-section">
+        <div class="milestone-header">🏆 Week2 项目里程碑</div>
+        <div class="milestone-grid">
+          <div class="milestone-item">
+            <div class="m-title">画出完整状态图</div>
+            <div class="m-desc">手绘或 Mermaid 画出 Agent 的 6 个节点 + 路由逻辑，能向别人讲清楚</div>
+          </div>
+          <div class="milestone-item">
+            <div class="m-title">添加一个 Agent 节点</div>
+            <div class="m-desc">例如：在 generate 前加「SQL 优化建议」节点，或在 chart 后加「自然语言解读」节点</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ WEEK 3 ═══════════ -->
+  <div class="week-card" id="week3">
+    <div class="week-header" onclick="toggleWeek('week3')">
+      <div class="week-num">W3</div>
+      <div class="week-info">
+        <div class="week-title">Week 3 · RAG 进阶 + 前沿技术</div>
+        <div class="week-subtitle">目标：掌握生产级 RAG 优化方法</div>
+      </div>
+      <div class="week-hours">14 天 · 2h/d</div>
+      <div class="week-toggle">▼</div>
+    </div>
+    <div class="week-body">
+      <div class="days-list">
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">1</div>
+          <div>
+            <div class="day-title">Chunk 策略：如何分块比什么更重要</div>
+            <div class="day-desc">理解固定窗口、语义段落、层级分块三种策略。分析项目中的 Schema 分块方式（表级 vs 字段级），理解为什么两种都要。在 <code>schema_indexer.py</code> 中添加一种新的分块策略。</div>
+            <div class="day-tags"><span class="tag tag-concept">Chunk</span><span class="tag tag-project">schema_indexer.py</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">2</div>
+          <div>
+            <div class="day-title">混合检索：向量 + BM25 关键词</div>
+            <div class="day-desc">纯向量检索对专有名词（如列名、表名）不友好，BM25 关键词检索可以弥补。理解 RRF（Reciprocal Rank Fusion）融合方法。项目当前是纯向量检索，可以尝试加上 BM25。</div>
+            <div class="day-tags"><span class="tag tag-concept">混合检索</span><span class="tag tag-project">retriever.py</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">3</div>
+          <div>
+            <div class="day-title">重排序（ReRanking）：精排优于粗排</div>
+            <div class="day-desc">理解两阶段检索：粗排（向量 ANN）→ 精排（Cross-Encoder ReRanker）。Cohere Rerank 是最流行的方案。尝试给项目加一个 ReRanker，将 Top20 检索结果重排为 Top5。</div>
+            <div class="day-tags"><span class="tag tag-concept">ReRanking</span><span class="tag tag-code">可选升级</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">4</div>
+          <div>
+            <div class="day-title">Function Calling / Tool Use：让 Agent 调用工具</div>
+            <div class="day-desc">这是 2024 年最实用的 Agent 能力。理解 OpenAI Function Calling 格式，对比 LangGraph 的 Tool 机制。在项目中，Agent 其实就是在做 Function Calling（调用 SQL Executor）。</div>
+            <div class="day-tags"><span class="tag tag-concept">Function Calling</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">5</div>
+          <div>
+            <div class="day-title">多租户安全：RAG 中的数据隔离</div>
+            <div class="day-desc">理解 RAG 场景下的多租户问题：不同租户的 Schema 相同，但数据不同。Agent 用 org_id 过滤，这是最简单的方案。进阶：租户专属 Embedding 模型（太贵，不推荐）。</div>
+            <div class="day-tags"><span class="tag tag-concept">安全架构</span><span class="tag tag-project">routes.py</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">6</div>
+          <div>
+            <div class="day-title">评估体系：如何衡量 RAG 质量</div>
+            <div class="day-desc">学习 RAG 三指标：Context Precision / Recall + Answer Correctness。学习用 LLM-as-Judge 做自动化评估（让 GPT-4 评估另一个 GPT-4 的回答）。为项目写一个简单的 SQL 正确性评估脚本。</div>
+            <div class="day-tags"><span class="tag tag-concept">RAG 评估</span><span class="tag tag-code">脚本开发</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">7</div>
+          <div>
+            <div class="day-title">Week3 总结 + RAG 优化实战</div>
+            <div class="day-desc">本周核心：RAG 质量 = Chunk 策略 × 检索质量 × 上下文利用率。动手优化一个环节（推荐：混合检索 + BM25）。这周的内容已经是 2025-2026 年生产级 RAG 的标配。</div>
+            <div class="day-tags"><span class="tag tag-project">实践</span><span class="tag tag-reading">周总结</span></div>
+            <div class="day-time">⏱ ~2h · 里程碑</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="milestone-section">
+        <div class="milestone-header">🏆 Week3 项目里程碑</div>
+        <div class="milestone-grid">
+          <div class="milestone-item">
+            <div class="m-title">混合检索上线</div>
+            <div class="m-desc">给 RAG 加上 BM25 关键词召回，用 RRF 融合向量和 BM25 结果</div>
+            <div class="m-file">backend/rag/retriever.py</div>
+          </div>
+          <div class="milestone-item">
+            <div class="m-title">SQL 正确性评估脚本</div>
+            <div class="m-desc">用 LLM-as-Judge 自动评估生成的 SQL 是否正确统计了正确指标</div>
+            <div class="m-file">scripts/eval_sql.py</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ WEEK 4 ═══════════ -->
+  <div class="week-card" id="week4">
+    <div class="week-header" onclick="toggleWeek('week4')">
+      <div class="week-num">W4</div>
+      <div class="week-info">
+        <div class="week-title">Week 4 · 前沿扩展 + 项目收尾</div>
+        <div class="week-subtitle">目标：接触最新技术方向，确定个人技术栈</div>
+      </div>
+      <div class="week-hours">14 天 · 2h/d</div>
+      <div class="week-toggle">▼</div>
+    </div>
+    <div class="week-body">
+      <div class="days-list">
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">1</div>
+          <div>
+            <div class="day-title">MCP（Model Context Protocol）：Agent 互联标准</div>
+            <div class="day-desc">MCP 是 2024 年底最火热的协议，让 Agent 可以调用任何外部工具（数据库、API、文件系统）。理解它的 Host/Client/Server 架构。这和 Java 的 SPI 机制有异曲同工之处。</div>
+            <div class="day-tags"><span class="tag tag-concept">MCP 前沿</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">2</div>
+          <div>
+            <div class="day-title">Memory / 长期记忆：让 Agent 记住上下文</div>
+            <div class="day-desc">理解 Agent Memory 三层：Working Memory（State）、Session Memory（会话）、Long-term Memory（向量数据库持久化）。用向量数据库存历史对话，实现「记住上次查询」的能力。</div>
+            <div class="day-tags"><span class="tag tag-concept">Agent Memory</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">3</div>
+          <div>
+            <div class="day-title">LLM Observability：LangSmith / OpenTelemetry</div>
+            <div class="day-desc">理解 LLM 可观测性三件套：Trace（链路追踪）+ Metrics（指标）+ Logging（日志）。用 LangSmith 追踪 Agent 的每个节点耗时和 token 消耗。对比 Java 的 SkyWalking / Jaeger。</div>
+            <div class="day-tags"><span class="tag tag-concept">可观测性</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">4</div>
+          <div>
+            <div class="day-title">本地模型：Ollama / vLLM / LM Studio</div>
+            <div class="day-desc">理解推理框架的区别：Ollama（易用）vs vLLM（高性能）vs LM Studio（GUI）。尝试用 Ollama 跑一个 qwen2.5:14b 或更大的模型，对比和 GPT-4o 的效果差距。</div>
+            <div class="day-tags"><span class="tag tag-concept">本地推理</span><span class="tag tag-code">安装配置</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">5</div>
+          <div>
+            <div class="day-title">项目总结：性能优化 + 工程化</div>
+            <div class="day-desc">优化方向：LLM 响应缓存（避免重复生成相同 SQL）、连接池优化、向量检索 TopK 调参。理解「AI Native 应用」和传统应用的区别：传统是确定逻辑，AI 是概率输出。</div>
+            <div class="day-tags"><span class="tag tag-project">性能优化</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">6</div>
+          <div>
+            <div class="day-title">技术博客 + 简历更新</div>
+            <div class="day-desc">写一篇技术博客（1500+ 字）：「用 LangGraph + RAG 打造 NL2SQL 查询助手」。把项目整理成简历可写的内容：技术栈、核心难点、个人贡献。</div>
+            <div class="day-tags"><span class="tag tag-reading">写作</span><span class="tag tag-project">博客输出</span></div>
+            <div class="day-time">⏱ ~2h</div>
+          </div>
+        </div>
+
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">7</div>
+          <div>
+            <div class="day-title">Week4 收尾 + 新项目构思</div>
+            <div class="day-desc">基于学到的技术，构思下一个项目（建议方向：客服 Agent、代码审查助手、本地文档问答）。完成 DEBUG_LOG.md 总结，整理 30 天的学习笔记。</div>
+            <div class="day-tags"><span class="tag tag-project">收尾</span><span class="tag tag-reading">规划</span></div>
+            <div class="day-time">⏱ ~2h · 里程碑</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="milestone-section">
+        <div class="milestone-header">🏆 Week4 项目里程碑</div>
+        <div class="milestone-grid">
+          <div class="milestone-item">
+            <div class="m-title">技术博客发表</div>
+            <div class="m-desc">在掘金/知乎/个人博客发表 NL2SQL 技术文章，附代码链接</div>
+          </div>
+          <div class="milestone-item">
+            <div class="m-title">个人知识库建成</div>
+            <div class="m-desc">整理 DEBUG_LOG.md + 30 天学习笔记，形成可查阅的知识体系</div>
+          </div>
+          <div class="milestone-item">
+            <div class="m-title">简历更新</div>
+            <div class="m-desc">在简历「项目经历」中加入 NL2SQL BI Agent，附 GitHub 链接</div>
+          </div>
+          <div class="milestone-item">
+            <div class="m-title">下一个项目立项</div>
+            <div class="m-desc">确定下一个 AI 项目方向，列出一周计划</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ 前沿技术清单 ═══════════ -->
+  <div class="section-title">🚀 2025-2026 前沿技术方向（选学）</div>
+  <div class="tech-grid">
+    <div class="tech-item tech-ai">
+      <div class="tech-name">Agentic RAG</div>
+      <div style="font-size:0.78rem; color:var(--text-dim)">Agent 自主决定检索策略、次数和深度，不是单次 RAG，而是多轮「检索→判断→再检索」</div>
+    </div>
+    <div class="tech-item tech-ai">
+      <div class="tech-name">MCP（Model Context Protocol）</div>
+      <div style="font-size:0.78rem; color:var(--text-dim)">Anthropic 主导的 Agent 工具调用标准协议，让不同 Agent 可以互操作，类似 USB-C 的 AI 版本</div>
+    </div>
+    <div class="tech-item tech-ai">
+      <div class="tech-name">Memory / Long-Term Memory</div>
+      <div style="font-size:0.78rem; color:var(--text-dim)">长期记忆：向量数据库存对话历史，Rerank 找回相关记忆，实现跨会话上下文</div>
+    </div>
+    <div class="tech-item tech-ai">
+      <div class="tech-name">vLLM / SGLang（推理加速）</div>
+      <div style="font-size:0.78rem; color:var(--text-dim)">生产级高并发推理框架，PagedAttention 显存管理，支撑企业级 Agent 服务</div>
+    </div>
+    <div class="tech-item tech-ai">
+      <div class="tech-name">Text-to-SQL 前沿模型</div>
+      <div style="font-size:0.78rem; color:var(--text-dim)">Groa SQL 等专用模型 + 微调方案，通用 LLM 生成 SQL 仍有 30-40% 错误率</div>
+    </div>
+    <div class="tech-item tech-ai">
+      <div class="tech-name">LLM-as-Judge 评估</div>
+      <div style="font-size:0.78rem; color:var(--text-dim)">用强模型评估弱模型输出，自动化 RAG/Agent 质量评估，降低人工标注成本</div>
+    </div>
+    <div class="tech-item tech-ai">
+      <div class="tech-name">GraphRAG / KG-RAG</div>
+      <div style="font-size:0.78rem; color:var(--text-dim)">用知识图谱增强 RAG，解决跨文档的复杂推理问题（如「A 和 B 有什么关系」）</div>
+    </div>
+    <div class="tech-item tech-ai">
+      <div class="tech-name">Cursor / Windsurf / CoPilot</div>
+      <div style="font-size:0.78rem; color:var(--text-dim)">AI 编码工具本身就是 Agent 应用，学习它们的 Prompt 设计是很好的案例</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ 每日 checklist ═══════════ -->
+  <div class="section-title">✅ 每日必做清单</div>
+  <div class="checklist">
+    <label class="check-item"><input type="checkbox"> 学一个新概念/工具（~45min）</label>
+    <label class="check-item"><input type="checkbox"> 在项目中改一处代码，看效果（~45min）</label>
+    <label class="check-item"><input type="checkbox"> 用项目跑一个实际查询，记录结果（~15min）</label>
+    <label class="check-item"><input type="checkbox"> 写 100 字学习笔记（~10min）</label>
+    <label class="check-item"><input type="checkbox"> git commit — 提交今日代码改动（~5min）</label>
+    <label class="check-item"><input type="checkbox"> 问题记录到 DEBUG_LOG.md（~5min）</label>
+  </div>
+
+  <!-- ═══════════ 资源推荐 ═══════════ -->
+  <div class="section-title">📚 资源推荐</div>
+  <div class="tech-grid">
+    <div class="tech-item tech-ai">
+      <div class="tech-name">LangGraph 官方文档</div>
+      <div style="font-size:0.78rem; color:var(--text-dim)">langchain-ai.github.io/langgraph — 最好的学习资料，配合项目代码阅读</div>
+    </div>
+    <div class="tech-item tech-ai">
+      <div class="tech-name">OpenAI CookBook</div>
+      <div style="font-size:0.78rem; color:var(--text-dim)">platform.openai.com/cookbook — 官方最佳实践，涵盖 Function Calling / RAG 等</div>
+    </div>
+    <div class="tech-item tech-ai">
+      <div class="tech-name">《Building Agentic RAG》</div>
+      <div style="font-size:0.78rem; color:var(--text-dim)">LlamaIndex 官方教程，从基础 RAG → Agentic RAG 演进路径</div>
+    </div>
+    <div class="tech-item tech-ai">
+      <div class="tech-name">《Prompt Engineering Guide》</div>
+      <div style="font-size:0.78rem; color:var(--text-dim)">promptingguide.ai — 免费的 prompt 工程手册，常用技巧全覆盖</div>
+    </div>
+    <div class="tech-item tech-ai">
+      <div class="tech-name">Milvus 官方文档</div>
+      <div style="font-size:0.78rem; color:var(--text-dim)">milvus.io/docs — 向量数据库核心概念，离线阅读重点章节</div>
+    </div>
+    <div class="tech-item tech-ai">
+      <div class="tech-name">HuggingFace Course</div>
+      <div style="font-size:0.78rem; color:var(--text-dim)">huggingface.co/learn — 免费 NLP 基础课，Embedding / Transformer 入门</div>
+    </div>
+  </div>
+
+  <div style="text-align:center; padding: 2rem 0 1rem; color: var(--text-dim); font-size:0.8rem;">
+    持续迭代 · 记录成长 · 每次调试都是学习<br>
+    <span style="color:var(--primary2)">DEBUG_LOG.md</span> 是你最好的老师
+  </div>
+
+</div>
+
+<script>
+  function toggleWeek(id) {
+    const card = document.getElementById(id);
+    card.classList.toggle('open');
+  }
+
+  // 本地存储：记住每日完成状态
+  document.querySelectorAll('.day-dot').forEach(dot => {
+    const key = 'day-' + dot.textContent.trim();
+    if (localStorage.getItem(key) === 'done') {
+      dot.classList.add('done');
+    }
+    dot.addEventListener('click', () => {
+      dot.classList.toggle('done');
+      localStorage.setItem(key, dot.classList.contains('done') ? 'done' : '');
+    });
+  });
+
+  // Checkbox 记忆
+  document.querySelectorAll('.checklist input').forEach(cb => {
+    const key = 'cb-' + cb.parentElement.textContent.trim().substring(0, 20);
+    if (localStorage.getItem(key) === '1') cb.checked = true;
+    cb.addEventListener('change', () => {
+      localStorage.setItem(key, cb.checked ? '1' : '');
+    });
+  });
+</script>
+</body>
+</html>
