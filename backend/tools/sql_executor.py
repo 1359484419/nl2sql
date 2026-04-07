@@ -58,7 +58,7 @@ class SQLExecutor:
     def _init_engine(self):
         db_url = settings.db_url
         self._engine = create_engine(
-            db_url,
+            db_url.replace("postgresql://", "postgresql+psycopg://").replace("postgres://", "postgresql+psycopg://"),
             pool_size=5,
             max_overflow=10,
             pool_pre_ping=True,

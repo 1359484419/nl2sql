@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Agent / RAG / LLM 学习路线 — Java 程序员的转型指南</title>
+  <title>Python → AI 工程师 · 从零到 NL2SQL 项目 · 学习路线</title>
   <style>
     :root {
       --bg:        #0f1117;
@@ -19,11 +19,16 @@
       --green:     #4ade80;
       --blue:      #60a5fa;
       --orange:    #fb923c;
+      --red:       #f87171;
       --r:         0.5rem;
+      --week1-col: #1e3a5f;
+      --week2-col: #1e4a2e;
+      --week3-col: #3a2e1a;
+      --week4-col: #2e1a3a;
+      --week5-col: #1a2e3a;
+      --week6-col: #3a1e2e;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       background: var(--bg);
       color: var(--text);
@@ -31,14 +36,12 @@
       font-size: 15px;
       line-height: 1.6;
     }
-
-    /* ─── Layout ─── */
-    .container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+    .container { max-width: 940px; margin: 0 auto; padding: 2rem 1.5rem; }
 
     /* ─── Header ─── */
     .header {
       text-align: center;
-      padding: 3rem 0 2rem;
+      padding: 2rem 0 1.5rem;
     }
     .header .badge {
       display: inline-block;
@@ -53,7 +56,7 @@
       margin-bottom: 1rem;
     }
     .header h1 {
-      font-size: 2rem;
+      font-size: 1.9rem;
       font-weight: 800;
       background: linear-gradient(135deg, var(--primary2), var(--primary));
       -webkit-background-clip: text;
@@ -61,83 +64,91 @@
       margin-bottom: 0.5rem;
     }
     .header p { color: var(--text-dim); font-size: 0.95rem; }
-
     .stats-bar {
       display: flex;
       justify-content: center;
       gap: 2rem;
       margin-top: 1.5rem;
+      flex-wrap: wrap;
     }
     .stat-item { text-align: center; }
-    .stat-num {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: var(--primary2);
-    }
+    .stat-num { font-size: 1.6rem; font-weight: 800; color: var(--primary2); }
     .stat-label { font-size: 0.75rem; color: var(--text-dim); }
 
-    /* ─── Philosophy Banner ─── */
-    .philosophy {
-      background: linear-gradient(135deg, #1e1244, #0f3d3d);
-      border: 1px solid var(--primary);
+    /* ─── Phase Banner ─── */
+    .phase-banner {
       border-radius: var(--r);
-      padding: 1.5rem;
-      margin: 2rem 0;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
+      padding: 1.2rem 1.5rem;
+      margin: 2rem 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
-    .philosophy h3 {
-      font-size: 0.8rem;
+    .phase-banner.ph1 { background: linear-gradient(135deg, #1e3a5f, #1a2e4a); border-left: 4px solid var(--blue); }
+    .phase-banner.ph2 { background: linear-gradient(135deg, #1e4a2e, #1a3a2a); border-left: 4px solid var(--green); }
+    .phase-banner.ph3 { background: linear-gradient(135deg, #3a2e1a, #3a2a1a); border-left: 4px solid var(--orange); }
+    .phase-banner.ph4 { background: linear-gradient(135deg, #2e1a3a, #2a1a3a); border-left: 4px solid var(--primary2); }
+    .phase-banner.ph5 { background: linear-gradient(135deg, #1a2e3a, #1a2a3a); border-left: 4px solid var(--accent); }
+    .phase-banner.ph6 { background: linear-gradient(135deg, #3a1e2e, #3a1a2a); border-left: 4px solid var(--accent2); }
+    .phase-num {
+      font-size: 0.7rem;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      color: var(--primary2);
-      margin-bottom: 0.5rem;
+      color: var(--text-dim);
+      margin-bottom: 0.2rem;
     }
-    .philosophy p { font-size: 0.88rem; color: var(--text); line-height: 1.7; }
-    .phil-dont { border-left: 3px solid var(--accent); padding-left: 1rem; }
-    .phil-do   { border-left: 3px solid var(--green);   padding-left: 1rem; }
+    .phase-title { font-weight: 700; font-size: 1rem; }
+    .phase-desc { font-size: 0.8rem; color: var(--text-dim); margin-top: 0.2rem; }
 
     /* ─── Week Card ─── */
     .week-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--r);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
       overflow: hidden;
       transition: border-color 0.2s;
     }
     .week-card:hover { border-color: var(--primary); }
+    .week-card.w1 { --wk-color: var(--blue); }
+    .week-card.w2 { --wk-color: var(--green); }
+    .week-card.w3 { --wk-color: var(--orange); }
+    .week-card.w4 { --wk-color: var(--primary2); }
+    .week-card.w5 { --wk-color: var(--accent); }
+    .week-card.w6 { --wk-color: var(--accent2); }
 
     .week-header {
       display: flex;
       align-items: center;
-      padding: 1rem 1.25rem;
+      padding: 0.9rem 1.25rem;
       cursor: pointer;
       user-select: none;
     }
     .week-num {
-      width: 2.5rem;
-      height: 2.5rem;
+      width: 2.2rem;
+      height: 2.2rem;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary), var(--primary2));
+      background: linear-gradient(135deg, var(--wk-color), var(--primary));
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       flex-shrink: 0;
-      margin-right: 1rem;
+      margin-right: 0.9rem;
+      color: #000;
     }
     .week-info { flex: 1; }
-    .week-title { font-weight: 700; font-size: 1rem; }
-    .week-subtitle { font-size: 0.78rem; color: var(--text-dim); }
+    .week-title { font-weight: 700; font-size: 0.95rem; }
+    .week-subtitle { font-size: 0.75rem; color: var(--text-dim); }
     .week-hours {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--text-dim);
       background: var(--surface2);
       padding: 0.2rem 0.6rem;
       border-radius: 99px;
+      white-space: nowrap;
     }
     .week-toggle {
       width: 1.5rem;
@@ -164,7 +175,7 @@
       display: flex;
       align-items: flex-start;
       gap: 0.75rem;
-      padding: 0.75rem 0;
+      padding: 0.85rem 0;
       border-bottom: 1px solid var(--border);
     }
     .day-row:last-child { border-bottom: none; }
@@ -178,32 +189,23 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       font-weight: 700;
       flex-shrink: 0;
-      margin-top: 0.1rem;
+      margin-top: 0.15rem;
       cursor: pointer;
       transition: all 0.2s;
     }
-    .day-dot.done {
-      background: var(--green);
-      border-color: var(--green);
-      color: #000;
-    }
+    .day-dot.done { background: var(--green); border-color: var(--green); color: #000; }
     .day-dot:hover { transform: scale(1.15); }
 
     .day-content { flex: 1; }
-    .day-title {
-      font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 0.25rem;
-    }
-    .day-desc { font-size: 0.8rem; color: var(--text-dim); line-height: 1.5; }
-
-    .day-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.4rem; }
+    .day-title { font-weight: 600; font-size: 0.88rem; margin-bottom: 0.2rem; }
+    .day-desc { font-size: 0.78rem; color: var(--text-dim); line-height: 1.55; }
+    .day-tags { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-top: 0.35rem; }
     .tag {
-      font-size: 0.65rem;
-      padding: 0.15rem 0.5rem;
+      font-size: 0.62rem;
+      padding: 0.1rem 0.45rem;
       border-radius: 99px;
       font-weight: 600;
     }
@@ -211,130 +213,178 @@
     .tag-code     { background: #1a2e1a; color: var(--green); }
     .tag-project  { background: #2e1a3a; color: var(--primary2); }
     .tag-reading  { background: #3a2e1a; color: var(--orange); }
+    .tag-test     { background: #2e1a1a; color: var(--accent); }
+    .tag-time     { background: var(--surface2); color: var(--text-dim); }
 
-    .day-time {
+    /* ─── Exercise Block ─── */
+    .exercise-block {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 0.85rem 1rem;
+      margin-top: 0.6rem;
+    }
+    .exercise-block .ex-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .exercise-block pre {
+      background: #0f1117;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.72rem;
+      color: var(--green);
+      font-family: 'Fira Code', 'Cascadia Code', monospace;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      margin-bottom: 0.5rem;
+    }
+    .exercise-block .verify-hint {
       font-size: 0.7rem;
       color: var(--text-dim);
-      white-space: nowrap;
-      margin-top: 0.2rem;
+      padding: 0.4rem 0.6rem;
+      background: rgba(251, 113, 133, 0.1);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 4px 4px 0;
+    }
+    .exercise-block .verify-hint code {
+      color: var(--primary2);
+      font-family: monospace;
+      font-size: 0.72rem;
     }
 
-    /* ─── Project Milestones ─── */
+    /* ─── Milestone ─── */
     .milestone-section { margin-top: 0.5rem; }
-
     .milestone-header {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--primary2);
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.5rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
-
     .milestone-header::before {
       content: '';
       width: 3px;
-      height: 1rem;
+      height: 0.9rem;
       background: var(--primary2);
       border-radius: 2px;
     }
-
     .milestone-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
-
     .milestone-item {
       background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: var(--r);
-      padding: 0.75rem;
-      font-size: 0.8rem;
-      line-height: 1.5;
+      padding: 0.65rem 0.8rem;
+      font-size: 0.78rem;
     }
+    .milestone-item .m-title { font-weight: 700; margin-bottom: 0.15rem; }
+    .milestone-item .m-desc { color: var(--text-dim); font-size: 0.72rem; }
 
-    .milestone-item .m-title {
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 0.2rem;
-    }
-
-    .milestone-item .m-desc { color: var(--text-dim); font-size: 0.75rem; }
-    .milestone-item .m-file { color: var(--blue); font-size: 0.72rem; }
-
-    /* ─── Feedback System ─── */
-    .feedback {
+    /* ─── Phase Summary ─── */
+    .phase-summary {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--r);
       padding: 1.25rem;
-      margin: 2rem 0;
+      margin: 1.5rem 0;
     }
-    .feedback h2 {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--primary2);
-      margin-bottom: 1rem;
+    .phase-summary h3 {
+      font-size: 0.8rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
+      color: var(--primary2);
+      margin-bottom: 0.8rem;
     }
-    .feedback-grid {
+    .phase-summary ul {
+      list-style: none;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 0.75rem;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.4rem;
     }
-    .fb-item {
+    .phase-summary li {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      padding: 0.3rem 0.5rem;
       background: var(--surface2);
+      border-radius: 4px;
+    }
+    .phase-summary li::before { content: '✓ '; color: var(--green); }
+
+    /* ─── Feynman Box ─── */
+    .feynman-box {
+      background: linear-gradient(135deg, #1a2e1a, #1e1244);
+      border: 1px solid var(--green);
       border-radius: var(--r);
-      padding: 0.75rem;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+    }
+    .feynman-box h3 {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--green);
+      margin-bottom: 0.6rem;
+    }
+    .feynman-box p { font-size: 0.82rem; color: var(--text-dim); line-height: 1.7; }
+    .feynman-box .steps {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+    }
+    .feynman-box .step {
+      background: rgba(74, 222, 128, 0.08);
+      border-radius: 4px;
+      padding: 0.6rem;
       text-align: center;
     }
-    .fb-icon { font-size: 1.5rem; margin-bottom: 0.3rem; }
-    .fb-label { font-size: 0.75rem; color: var(--text-dim); }
-    .fb-desc  { font-size: 0.72rem; color: var(--text-dim); margin-top: 0.2rem; }
+    .feynman-box .step-num { font-size: 0.7rem; color: var(--green); font-weight: 700; }
+    .feynman-box .step-text { font-size: 0.72rem; color: var(--text-dim); margin-top: 0.2rem; }
 
-    /* ─── Tech Stack ─── */
-    .tech-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-    .tech-item {
-      background: var(--surface);
+    /* ─── PyCharm Tips ─── */
+    .pycharm-tip {
+      background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: var(--r);
-      padding: 1rem;
+      padding: 0.8rem 1rem;
+      margin: 1rem 0;
+      font-size: 0.78rem;
     }
-    .tech-name { font-weight: 700; font-size: 0.88rem; margin-bottom: 0.3rem; }
-    .tech-java { border-left: 3px solid #f97316; }
-    .tech-ai   { border-left: 3px solid var(--primary2); }
-    .tech-hub  { border-left: 3px solid var(--blue); }
+    .pycharm-tip .tip-title {
+      font-weight: 700;
+      color: var(--orange);
+      margin-bottom: 0.4rem;
+      font-size: 0.75rem;
+    }
+    .pycharm-tip ul { list-style: none; color: var(--text-dim); }
+    .pycharm-tip li { padding: 0.15rem 0; }
+    .pycharm-tip kbd {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 0.1rem 0.35rem;
+      font-size: 0.7rem;
+      font-family: monospace;
+      color: var(--text);
+    }
 
     /* ─── Checklist ─── */
-    .checklist { margin-top: 1.5rem; }
-    .check-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.5rem 0;
-      font-size: 0.88rem;
-      cursor: pointer;
-    }
-    .check-item input[type="checkbox"] {
-      width: 1rem;
-      height: 1rem;
-      accent-color: var(--primary2);
-      cursor: pointer;
-    }
-
-    /* ─── Section Title ─── */
     .section-title {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.1em;
@@ -350,16 +400,47 @@
       height: 1px;
       background: var(--border);
     }
-
-    /* ─── Responsive ─── */
-    @media (max-width: 600px) {
-      .philosophy { grid-template-columns: 1fr; }
-      .stats-bar  { gap: 1rem; }
-      .milestone-grid { grid-template-columns: 1fr; }
-      .tech-grid  { grid-template-columns: 1fr; }
+    .checklist { margin-top: 1rem; }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.45rem 0;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+    .check-item input[type="checkbox"] {
+      width: 0.95rem;
+      height: 0.95rem;
+      accent-color: var(--primary2);
+      cursor: pointer;
     }
 
-    /* ─── Print-friendly ─── */
+    /* ─── Resources ─── */
+    .resources-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+    .res-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 0.8rem;
+    }
+    .res-name { font-weight: 700; font-size: 0.82rem; margin-bottom: 0.25rem; }
+    .res-desc { font-size: 0.72rem; color: var(--text-dim); }
+    .res-item.r-essential { border-left: 3px solid var(--green); }
+    .res-item.r-optional { border-left: 3px solid var(--text-dim); }
+
+    @media (max-width: 600px) {
+      .stats-bar { gap: 1rem; }
+      .milestone-grid { grid-template-columns: 1fr; }
+      .phase-summary ul { grid-template-columns: 1fr; }
+      .feynman-box .steps { grid-template-columns: 1fr; }
+      .resources-grid { grid-template-columns: 1fr; }
+    }
     @media print {
       body { background: #fff; color: #000; }
       .day-dot { border-color: #999; }
@@ -372,108 +453,85 @@
 
   <!-- ═══════════ HEADER ═══════════ -->
   <div class="header">
-    <div class="badge">60 小时 · Java → AI 工程师</div>
-    <h1>AI Agent / RAG / LLM<br>转型学习路线</h1>
-    <p>以 NL2SQL BI Agent 项目为载体，每天 2 小时，持续正反馈，4 周完成蜕变</p>
+    <div class="badge">180 小时 · 每天 6h · 费曼学习法</div>
+    <h1>Python 零基础 → AI 工程师<br>NL2SQL 项目完整学习路线</h1>
+    <p>从 Python 小白到独立完成 NL2SQL BI Agent 项目，每天有代码写、有结果校验</p>
     <div class="stats-bar">
       <div class="stat-item">
-        <div class="stat-num">4</div>
-        <div class="stat-label">周学习周期</div>
+        <div class="stat-num">6</div>
+        <div class="stat-label">阶段学习</div>
       </div>
       <div class="stat-item">
-        <div class="stat-num">60h</div>
+        <div class="stat-num">180h</div>
         <div class="stat-label">总学习时长</div>
       </div>
       <div class="stat-item">
-        <div class="stat-num">4</div>
-        <div class="stat-label">阶段性项目里程碑</div>
+        <div class="stat-num">6h</div>
+        <div class="stat-label">每日学习</div>
       </div>
       <div class="stat-item">
-        <div class="stat-num">12+</div>
-        <div class="stat-label">可提交到简历的项目</div>
+        <div class="stat-num">~30</div>
+        <div class="stat-label">个可运行程序</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">1</div>
+        <div class="stat-label">个完整项目作品</div>
       </div>
     </div>
   </div>
 
-  <!-- ═══════════ PHILOSOPHY ═══════════ -->
-  <div class="philosophy">
-    <div class="phil-do">
-      <h3>✅ 推荐做法</h3>
-      <p>以 <strong>NL2SQL BI Agent</strong> 为锚点，每学一个知识点，立即在这个项目里改一处代码。每天都能看到项目变好。</p>
-      <p style="margin-top:0.6rem">学的就是用的，用的就是练的。用输出倒逼输入，用正反馈维持动力。</p>
-    </div>
-    <div class="phil-dont">
-      <h3>❌ 避免做法</h3>
-      <p>先刷完所有视频/文档再动手——你会发现前学后忘，没有肌肉记忆。</p>
-      <p style="margin-top:0.6rem">不追求「完整掌握」再行动：先跑通，再理解，最后优化。学习曲线要短，成就感要快。</p>
-    </div>
-  </div>
-
-  <!-- ═══════════ 正反馈系统 ═══════════ -->
-  <div class="feedback">
-    <h2>⚡ 每日正反馈机制</h2>
-    <div class="feedback-grid">
-      <div class="fb-item">
-        <div class="fb-icon">🔁</div>
-        <div class="fb-label">每日代码提交</div>
-        <div class="fb-desc">git commit — 哪怕只改了 README 或加了一行注释</div>
+  <!-- ═══════════ FEYNMAN BOX ═══════════ -->
+  <div class="feynman-box">
+    <h3>Feynman 学习法 — 每天的执行步骤</h3>
+    <p>每学一个新概念，不要先看视频。先看例子→自己写代码实现→对照校验→用大白话讲给自己听。讲不清楚的地方就是还没懂，回去重写代码。</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">Step 1 · 看</div>
+        <div class="step-text">读懂例子代码，知道它是干什么的</div>
       </div>
-      <div class="fb-item">
-        <div class="fb-icon">📝</div>
-        <div class="fb-label">每日学习笔记</div>
-        <div class="fb-desc">用 Obsidian/飞书记录，200 字即可，重在总结</div>
+      <div class="step">
+        <div class="step-num">Step 2 · 写</div>
+        <div class="step-text">遮住例子，自己写出来（查文档不算作弊）</div>
       </div>
-      <div class="fb-item">
-        <div class="fb-icon">🤖</div>
-        <div class="fb-label">每日 1 次提问实验</div>
-        <div class="fb-desc">用项目跑通一个新问题，观察 SQL / 图表变化</div>
-      </div>
-      <div class="fb-item">
-        <div class="fb-icon">📊</div>
-        <div class="fb-label">DEBUG_LOG.md 追加</div>
-        <div class="fb-desc">每解决一个问题记录下来，形成自己的知识库</div>
-      </div>
-      <div class="fb-item">
-        <div class="fb-icon">🏆</div>
-        <div class="fb-label">里程碑庆祝</div>
-        <div class="fb-desc">每完成一周，给自己一个小奖励</div>
-      </div>
-      <div class="fb-item">
-        <div class="fb-icon">📱</div>
-        <div class="fb-label">每周分享</div>
-        <div class="fb-desc">对朋友/同事讲一遍，讲不清楚 = 没学会</div>
+      <div class="step">
+        <div class="step-num">Step 3 · 验</div>
+        <div class="step-text">运行 <code>python check_你的代码.py</code> 校验对不对</div>
       </div>
     </div>
   </div>
 
-  <!-- ═══════════ TECH BRIDGES ═══════════ -->
-  <div class="section-title">技术桥梁 · Java → AI</div>
-  <div class="tech-grid">
-    <div class="tech-item tech-java">
-      <div class="tech-name">你的 Java 经验</div>
-      <div style="font-size:0.78rem; color:var(--text-dim)">OOP / 设计模式<br>Spring IoC → 理解 Agent 编排<br>REST API → SSE 流式接口<br>JPA/Hibernate → SQLAlchemy</div>
-    </div>
-    <div class="tech-item tech-ai">
-      <div class="tech-name">AI 新技能</div>
-      <div style="font-size:0.78rem; color:var(--text-dim)">LLM API 调用<br>Prompt Engineering<br>RAG（检索增强生成）<br>LangGraph 状态机</div>
-    </div>
-    <div class="tech-item tech-hub">
-      <div class="tech-name">快速工具链</div>
-      <div style="font-size:0.78rem; color:var(--text-dim)">Ollama（本地跑模型）<br>Milvus Lite（零配置向量库）<br>FastAPI（Python Web 框架）<br>Cursor AI（编码助手）</div>
+  <!-- ═══════════ PYCHARM TIPS ═══════════ -->
+  <div class="pycharm-tip">
+    <div class="tip-title">PyCharm 快速上手（你之前问的）</div>
+    <ul>
+      <li><kbd>⇧</kbd><kbd>⌘</kbd><kbd>F10</kbd> 运行当前文件（或者点绿色的三角▶）</li>
+      <li><kbd>⌘</kbd><kbd>1</kbd> 打开/关闭项目文件树</li>
+      <li><kbd>⌘</kbd><kbd>N</kbd> 新建文件/类/函数</li>
+      <li><kbd>⌥</kbd><kbd>⏎</kbd> 快速修复（Import 缺失包等）</li>
+      <li>一键导入所有依赖：用 <code>requirements.txt</code>，PyCharm 会提示「Install requirements」</li>
+      <li>选项目解析器：<kbd>⌘</kbd><kbd>,</kbd> → Project → Python Interpreter → 选对 .venv</li>
+      <li>Terminal 里装包：<code>pip install 包名</code>，PyCharm 内置 Terminal 无需切换窗口</li>
+    </ul>
+  </div>
+
+  <!-- ═══════════ PHASE 1 ═══════════ -->
+  <div class="phase-banner ph1">
+    <div>
+      <div class="phase-num">Phase 1</div>
+      <div class="phase-title">Python 基础 — 学会用 Python 写程序</div>
+      <div class="phase-desc">30 小时 · 5 天 × 6h · 目标：能写独立程序、能读懂 NL2SQL 项目代码</div>
     </div>
   </div>
 
   <!-- ═══════════ WEEK 1 ═══════════ -->
-  <div class="section-title">📅 学习计划</div>
-
-  <div class="week-card open" id="week1">
+  <div class="week-card open w1" id="week1">
     <div class="week-header" onclick="toggleWeek('week1')">
       <div class="week-num">W1</div>
       <div class="week-info">
-        <div class="week-title">Week 1 · Python 速通 + LLM API 初体验</div>
-        <div class="week-subtitle">目标：跑通项目，理解 LLM 如何「听话」</div>
+        <div class="week-title">Week 1 · Python 基础语法 — 会写、会运行、能看懂</div>
+        <div class="week-subtitle">目标：掌握 Python 最小语法集，足以读懂 NL2SQL 项目</div>
       </div>
-      <div class="week-hours">14 天 · 2h/d</div>
+      <div class="week-hours">5 天 · 6h/d</div>
       <div class="week-toggle">▼</div>
     </div>
     <div class="week-body">
@@ -481,516 +539,2016 @@
 
         <!-- Day 1 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">1</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">1</div>
           <div>
-            <div class="day-title">环境搭建 + 跑通第一个 LLM 调用</div>
-            <div class="day-desc">安装 Python 3.10+，用 OpenAI SDK（或 Ollama）发一条 API 调用，理解 Completion vs Chat 接口。尝试换不同的 system prompt 观察回答差异。</div>
+            <div class="day-title">Day 1 · 装好环境，写出第一个程序</div>
+            <div class="day-desc">安装 PyCharm + Python 3.10+，学会运行.py文件、理解 print() 是什么。目标：能独立新建文件→写代码→运行→看到输出。NL2SQL 项目里，你第一个要会运行的就是 <code>backend/main.py</code>。</div>
             <div class="day-tags">
-              <span class="tag tag-code">安装配置</span>
-              <span class="tag tag-concept">LLM API</span>
+              <span class="tag tag-concept">PyCharm 基础</span>
+              <span class="tag tag-code">print / 变量</span>
             </div>
-            <div class="day-time">⏱ ~2h</div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 1-1：写一个自我介绍程序（保存到 day1_hello.py）</div>
+<pre>
+# 写完运行，看到输出就算成功
+# 提示：print("内容") 会把内容显示出来
+# 试着用 print 输出你的名字、年龄、你最想做的东西
+name = "你的名字"
+age = 25
+print(f"我叫{name}，今年{age}岁")
+</pre>
+              <div class="verify-hint">校验：运行后屏幕上出现文字 → ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 1-2：运行 NL2SQL 项目的后端服务（必做）</div>
+<pre>
+# 在 PyCharm Terminal 里依次运行：
+pip install -r requirements.txt          # 一键安装所有依赖
+python backend/main.py                    # 启动服务
+# 如果看到 "Uvicorn running on http://0.0.0.0:8001" → 成功！
+# 如果报错 missing greenlet → pip install greenlet
+# 如果报错缺少其他包 → 哪个缺装哪个（pip install xxx）
+</pre>
+              <div class="verify-hint">校验：浏览器打开 <code>http://localhost:8001/docs</code> 看到 API 文档 → ✅ 完成</div>
+            </div>
           </div>
         </div>
 
         <!-- Day 2 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">2</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">2</div>
           <div>
-            <div class="day-title">Python 核心语法（Java 程序员重点）</div>
-            <div class="day-desc">重点学：装饰器、上下文管理器（with）、异步（async/await）、字典/列表推导式。类比 Java：@注解 → Python @decorator；Spring Bean → Python 单例；接口 → Protocol。</div>
+            <div class="day-title">Day 2 · 变量 & 数据类型 — Python 的积木</div>
+            <div class="day-desc">Python 只有 4 种基础数据类型：整数(int)、小数(float)、字符串(str)、布尔(bool)。对比 NL2SQL 项目里你见过的：<code>day_date.date()</code> 是 datetime 对象、<code>str(day_date)</code> 是转成字符串。这天学明白「每种类型能做什么、不能做什么」。</div>
             <div class="day-tags">
-              <span class="tag tag-concept">Python 语法</span>
-              <span class="tag tag-code">对比学习</span>
+              <span class="tag tag-concept">int / float / str / bool</span>
+              <span class="tag tag-code">类型转换</span>
             </div>
-            <div class="day-time">⏱ ~2h</div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 2-1：数据类型转换（保存到 day2_types.py）</div>
+<pre>
+# 1. 整数和小数互相转
+x = 10
+y = float(x)    # int → float
+z = int(3.7)    # float → int（会截断小数！3.7→3）
+
+# 2. 字符串转数字
+num = int("42")
+price = float("19.9")
+
+# 3. 任何东西都能转字符串
+s = str(12345)
+
+# 4. 判断类型
+print(type(y))       # &lt;class 'float'&gt;
+print(isinstance(x, int))  # True
+
+# === 你的任务（遮住上面自己写）===
+# 写一段代码：
+# a) 把字符串 "99" 转成整数，加 1，打印结果
+# b) 把整数 8 转成小数，除以 3，打印结果
+# c) 把 3.14 转成整数，看看小数部分丢没丢
+</pre>
+              <div class="verify-hint">校验：运行后屏幕分别显示 <code>100</code>、<code>2.666...</code>、<code>3</code> → ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 2-2：在 NL2SQL 项目里找数据类型例子</div>
+<pre>
+# 在 PyCharm 里打开 nl2sql_agent.py，搜索 type 关键字
+# 找到 NL2SQLState 的定义：
+class NL2SQLState(TypedDict, total=False):
+    question: str        # 用户问题 → 字符串
+    org_id: str           # 租户ID → 字符串
+    retry_count: int      # 重试次数 → 整数
+    sql_valid: bool       # SQL是否有效 → 布尔值
+    # ...
+
+# 任务：说出每个字段的类型，以及它为什么是那个类型
+# （写在大纲笔记里，不需要交代码）
+</pre>
+              <div class="verify-hint">校验：能解释 <code>retry_count: int</code> 和 <code>sql_valid: bool</code> 的区别 → ✅ 完成</div>
+            </div>
           </div>
         </div>
 
         <!-- Day 3 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">3</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">3</div>
           <div>
-            <div class="day-title">Prompt Engineering 核心原则</div>
-            <div class="day-desc">学习 5 大原则：明确性、分解任务、Few-shot 示例、角色设定、输出格式约束。在项目中修改 SYSTEM_PROMPT，看效果差异。重点：LLM 不是「思考」，是「模式补全」。</div>
+            <div class="day-title">Day 3 · if / for / while — 让程序做判断和循环</div>
+            <div class="day-desc">程序的核心能力：做判断（if）、重复做事（for/while）。NL2SQL 项目里大量用到：<code>if not sql_lower.startswith("select")</code>（判断 SQL 合法性）、<code>for c, vec in zip(chunks, vectors)</code>（遍历生成向量）。这天的重点不是「看」，是「自己能写出来」。</div>
             <div class="day-tags">
-              <span class="tag tag-concept">Prompt 工程</span>
-              <span class="tag tag-project">nl2sql_agent.py</span>
+              <span class="tag tag-concept">if / for / while</span>
+              <span class="tag tag-code">循环遍历</span>
             </div>
-            <div class="day-time">⏱ ~2h</div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 3-1：猜数字游戏（保存到 day3_guess.py）</div>
+<pre>
+import random
+
+target = random.randint(1, 10)
+print("我想了一个1-10的数字，你猜是几？")
+
+while True:
+    guess = int(input("你的猜测: "))   # input() 等待你输入
+    if guess == target:
+        print("对了！")
+        break                          # 猜对了，退出循环
+    elif guess &lt; target:
+        print("太小了")
+    else:
+        print("太大了")
+</pre>
+              <div class="verify-hint">校验：能运行、能猜对数字 → ✅ 完成。如果报错 <code>NameError</code>，说明有变量名写错了。</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 3-2：看懂 NL2SQL 的判断逻辑</div>
+<pre>
+# 打开 sql_executor.py，找到这段代码：
+
+errors = []
+if not sql_lower.startswith("select"):
+    errors.append("SQL 必须以 SELECT 开头")
+if "org_id" not in sql_lower:
+    errors.append("缺少 org_id 过滤条件")
+if errors:
+    return False, "; ".join(errors)
+return True, None
+
+# 任务：用自己的话写出这段代码在干什么
+# （用中文写在大纲笔记里）
+</pre>
+              <div class="verify-hint">校验：能说出「如果 SQL 不是 SELECT 开头，或者没有 org_id，就报错」 → ✅ 完成</div>
+            </div>
           </div>
         </div>
 
         <!-- Day 4 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">4</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">4</div>
           <div>
-            <div class="day-title">理解 Embedding：让 AI 读懂语义</div>
-            <div class="day-desc">理解 Embedding 本质：把文本转成向量，语义相似 → 向量相近。学习使用 OpenAI/HuggingFace 的 embedding 接口。在项目中找到 <code>embedding.py</code>，理解它如何把 Schema 转成向量存入 Milvus。</div>
+            <div class="day-title">Day 4 · 列表 & 字典 — Python 最强大的两种容器</div>
+            <div class="day-desc">列表（list）像购物清单，字典（dict）像通讯录。这两种数据结构在 NL2SQL 项目里到处都是：<code>["hash", "message"]</code>（列表）、<code>{"column": "name", "type": "VARCHAR"}</code>（字典）。必须掌握：增删改查、遍历、嵌套。</div>
             <div class="day-tags">
-              <span class="tag tag-concept">Embedding 原理</span>
-              <span class="tag tag-project">embedding.py</span>
+              <span class="tag tag-concept">list / dict</span>
+              <span class="tag tag-code">增删改查</span>
             </div>
-            <div class="day-time">⏱ ~2h</div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 4-1：列表和字典操作（保存到 day4_containers.py）</div>
+<pre>
+# 列表操作
+fruits = ["苹果", "香蕉", "橙子"]
+fruits.append("葡萄")           # 追加
+fruits.insert(1, "西瓜")        # 插入到位置1
+print(fruits[0])                # 第一个元素
+print(len(fruits))             # 长度
+for fruit in fruits:
+    print(fruit)
+
+# 字典操作
+user = {"name": "张三", "age": 28, "city": "北京"}
+user["job"] = "工程师"          # 新增键值对
+print(user["name"])             # 读取
+for key, value in user.items(): # 遍历键值对
+    print(f"{key}: {value}")
+
+# === 你的任务 ===
+# 用列表和字典，设计一个"学生成绩管理系统"：
+# students = [
+#     {"name": "小明", "score": 92},
+#     {"name": "小红", "score": 85},
+#     ...
+# ]
+# 找出最高分学生，打印"最高分：小明，92分"
+</pre>
+              <div class="verify-hint">校验：运行后输出最高分学生名字 → ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 4-2：在 NL2SQL 项目里找列表和字典</div>
+<pre>
+# 在 PyCharm 里全局搜索（⌘⇧F）关键词 "[]"
+# 在 nl2sql_agent.py 找到：
+
+commits = [{"hash": c["hash"], "message": c["message"]} for c in commits]
+
+# 任务：说出这句话是什么意思
+# 提示：c["hash"] 和 c["message"] 中的 c 是什么？
+</pre>
+              <div class="verify-hint">校验：能解释「遍历 commits 列表，取出每个元素 c 的 hash 和 message 组成新字典」 → ✅ 完成</div>
+            </div>
           </div>
         </div>
 
         <!-- Day 5 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">5</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">5</div>
           <div>
-            <div class="day-title">向量数据库：Milvus / ChromaDB</div>
-            <div class="day-desc">理解为什么需要向量数据库（海量向量快速相似搜索）。Milvus Lite 是零配置版本，正好适合学习。跑通项目的 RAG 检索流程：用户问题 → Embedding → Milvus 查询 → 返回上下文。</div>
+            <div class="day-title">Day 5 · 函数 & 模块 — 把代码变成可复用的工具</div>
+            <div class="day-desc">函数（def）就像 Java 的方法，模块（import）就像 Java 的包。NL2SQL 项目里每个 .py 文件都是一个模块：<code>from backend.rag.embedding import embedding_model</code>。掌握函数定义、参数默认值、返回值。</div>
             <div class="day-tags">
-              <span class="tag tag-concept">向量数据库</span>
-              <span class="tag tag-project">retriever.py</span>
+              <span class="tag tag-concept">def / import / return</span>
+              <span class="tag tag-code">模块化</span>
             </div>
-            <div class="day-time">⏱ ~2h</div>
-          </div>
-        </div>
 
-        <!-- Day 6 -->
-        <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">6</div>
-          <div>
-            <div class="day-title">RAG 核心原理 + 项目检索链路分析</div>
-            <div class="day-desc">完整走一遍项目 RAG 流程：问题 → Embed → 向量检索 → 上下文组装 → LLM 生成。找到 <code>retriever.py</code> 中的三路检索（Schema + 指标 + SQL 示例），理解各自的作用。</div>
-            <div class="day-tags">
-              <span class="tag tag-concept">RAG 原理</span>
-              <span class="tag tag-project">retriever.py</span>
+            <div class="exercise-block">
+              <div class="ex-title">练习 5-1：写一个温度转换函数（保存到 day5_functions.py）</div>
+<pre>
+# 摄氏度 ↔ 华氏度 互相转换
+
+def celsius_to_fahrenheit(c):
+    """把摄氏度转成华氏度"""
+    return c * 9 / 5 + 32
+
+def fahrenheit_to_celsius(f):
+    """把华氏度转成摄氏度"""
+    return (f - 32) * 5 / 9
+
+# 测试
+print(celsius_to_fahrenheit(0))    # 应该是 32
+print(celsius_to_fahrenheit(100)) # 应该是 212
+print(fahrenheit_to_celsius(212)) # 应该是 100
+
+# === 你的任务 ===
+# a) 写一个函数，输入秒数，返回 "X小时X分钟X秒" 格式
+# b) 写一个函数，输入列表 [3,1,4,1,5]，返回最大值和最小值（hint: return max, min）
+# c) 写一个函数 def greet(name, prefix="你好")，prefix 有默认值
+</pre>
+              <div class="verify-hint">校验：运行后：a) 输入3600输出"1小时0分钟0秒"，b) 输出 (5, 1)，c) <code>greet("小明")</code> 输出"你好，小明" → ✅ 完成</div>
             </div>
-            <div class="day-time">⏱ ~2h</div>
-          </div>
-        </div>
 
-        <!-- Day 7 -->
-        <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">7</div>
-          <div>
-            <div class="day-title">Week1 总结 + 在项目中加一个小功能</div>
-            <div class="day-desc">建议加一个功能：在 RAG 检索时打印命中的 Schema 片段（方便调试）。这周学到的核心：LLM 是「模式补全」，Embedding 是「语义匹配」，RAG 是「给 LLM 喂正确上下文」。</div>
-            <div class="day-tags">
-              <span class="tag tag-project">实践</span>
-              <span class="tag tag-reading">周总结</span>
+            <div class="exercise-block">
+              <div class="ex-title">练习 5-2：理解 NL2SQL 的模块导入</div>
+<pre>
+# 在 routes.py 顶部找到：
+from backend.agents.nl2sql_agent import nl2sql_graph
+from backend.services.conversation import ConversationService
+
+# 任务：
+# a) nl2sql_graph 是什么？（函数？类？）
+# 打开 nl2sql_agent.py，数一下 "def " 出现了多少次，这就是有多少个函数
+# b) ConversationService 是什么？
+# 打开 conversation.py，看看它的 __init__ 方法（如果有的话）
+</pre>
+              <div class="verify-hint">校验：能说出 nl2sql_graph 是函数名，ConversationService 是类名 → ✅ 完成</div>
             </div>
-            <div class="day-time">⏱ ~2h · 里程碑</div>
+
+            <div class="milestone-section">
+              <div class="milestone-header">W1 里程碑（必须全部完成才能进入 W2）</div>
+              <div class="milestone-grid">
+                <div class="milestone-item">
+                  <div class="m-title">能独立运行 NL2SQL 后端</div>
+                  <div class="m-desc"><code>python backend/main.py</code> 启动成功，<code>/docs</code> 可访问</div>
+                </div>
+                <div class="milestone-item">
+                  <div class="m-title">写出 4 个独立 Python 程序</div>
+                  <div class="m-desc">day1-hello, day2-types, day3-guess, day5-functions 能独立运行无报错</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-      </div>
-
-      <div class="milestone-section">
-        <div class="milestone-header">🏆 Week1 项目里程碑</div>
-        <div class="milestone-grid">
-          <div class="milestone-item">
-            <div class="m-title">跑通完整查询流程</div>
-            <div class="m-desc">从前端提问到看到图表，全链路跑通，理解数据流向</div>
-          </div>
-          <div class="milestone-item">
-            <div class="m-title">改一处 Prompt 看效果</div>
-            <div class="m-desc">修改 SYSTEM_PROMPT，让生成的 SQL 更准确，观察差异</div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 
   <!-- ═══════════ WEEK 2 ═══════════ -->
-  <div class="week-card" id="week2">
+  <div class="week-card w2" id="week2">
     <div class="week-header" onclick="toggleWeek('week2')">
       <div class="week-num">W2</div>
       <div class="week-info">
-        <div class="week-title">Week 2 · LangGraph 状态机 + Agent 核心概念</div>
-        <div class="week-subtitle">目标：理解 Agent 如何「编排」思考步骤</div>
+        <div class="week-title">Week 2 · Python 进阶 — 面向对象、文件、常用库</div>
+        <div class="week-subtitle">目标：能读懂 NL2SQL 项目的类定义，自己写点小工具</div>
       </div>
-      <div class="week-hours">14 天 · 2h/d</div>
+      <div class="week-hours">5 天 · 6h/d</div>
       <div class="week-toggle">▼</div>
     </div>
     <div class="week-body">
       <div class="days-list">
 
+        <!-- Day 6 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">1</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">6</div>
           <div>
-            <div class="day-title">理解 Agent 本质：循环 + 工具 + 记忆</div>
-            <div class="day-desc">Agent = LLM + 工具（Tool）+ 循环（Loop）+ 记忆（Memory）。用 Java 类比：Agent 像一个 Spring Bean，根据用户请求（State）决定下一步做什么（路由），每个步骤是一个 Service。</div>
-            <div class="day-tags"><span class="tag tag-concept">Agent 原理</span></div>
-            <div class="day-time">⏱ ~2h</div>
+            <div class="day-title">Day 6 · 面向对象 — class 是什么、为什么需要它</div>
+            <div class="day-desc">class（类）是 Python 组织代码的核心方式。NL2SQL 项目里到处是类：<code>class NL2SQLState</code>、<code>class EmbeddingModel</code>、<code>class MetricsIndexer</code>。类把"数据"和"操作数据的函数"打包在一起，叫"方法"。对比理解：Java 的 class 和 Python 的 class 本质一样，只是语法不同。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">class / __init__ / self</span>
+              <span class="tag tag-code">OOP</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 6-1：写一个"银行账户"类（保存到 day6_class.py）</div>
+<pre>
+class BankAccount:
+    def __init__(self, owner, balance=0):
+        """初始化账户，owner=户主名，balance=余额"""
+        self.owner = owner
+        self.balance = balance
+
+    def deposit(self, amount):
+        """存钱"""
+        if amount &gt; 0:
+            self.balance += amount
+            print(f"存了 {amount}，余额 {self.balance}")
+        else:
+            print("存款必须是正数")
+
+    def withdraw(self, amount):
+        """取钱"""
+        if amount &gt; self.balance:
+            print(f"余额不足！余额 {self.balance}")
+        else:
+            self.balance -= amount
+            print(f"取了 {amount}，余额 {self.balance}")
+
+    def __str__(self):
+        """print(账户) 时显示的内容"""
+        return f"账户：{self.owner}，余额：{self.balance}"
+
+# 测试
+acc = BankAccount("小明", 1000)
+acc.deposit(500)      # 存500
+acc.withdraw(200)     # 取200
+acc.withdraw(2000)    # 余额不足
+print(acc)            # 打印账户信息
+</pre>
+              <div class="verify-hint">校验：运行后依次输出"存了500，余额1500"、"取了200，余额1300"、"余额不足！余额1300"、"账户：小明，余额：1300" → ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 6-2：看懂 NL2SQLState 类</div>
+<pre>
+# 在 nl2sql_agent.py 找到：
+
+class NL2SQLState(TypedDict, total=False):
+    question: str
+    org_id: str
+    generated_sql: Optional[str]
+    sql_valid: bool
+    # ...
+
+# 任务：
+# a) TypedDict 和普通 dict 有什么区别？
+#    提示：TypedDict 要求每个字段有固定类型，dict 不要求
+# b) total=False 是什么意思？
+#    提示：total=False 表示所有字段都是可选的，可以不填
+# c) NL2SQLState 和 BankAccount 有什么相同点和不同点？
+</pre>
+              <div class="verify-hint">校验：能解释 a) TypedDict 让字段有类型约束 b) total=False 所有字段可选 → ✅ 完成</div>
+            </div>
           </div>
         </div>
 
+        <!-- Day 7 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">2</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">7</div>
           <div>
-            <div class="day-title">LangGraph 状态机：概念入门</div>
-            <div class="day-desc">理解 StateGraph、Node、Edge、ConditionalEdge。用生活类比：状态机就像餐厅流程：接单 → 做菜 → 上菜 → 结账，每步有固定动作，失败时回到上一步。重点：它解决了「Agent 步骤编排」的问题。</div>
-            <div class="day-tags"><span class="tag tag-concept">LangGraph</span><span class="tag tag-project">nl2sql_agent.py</span></div>
-            <div class="day-time">⏱ ~2h</div>
+            <div class="day-title">Day 7 · 文件读写 & JSON — 数据的存储和读取</div>
+            <div class="day-desc">NL2SQL 项目的数据库 Schema 保存在 <code>saas_bi_schema.py</code> 里，是 JSON 格式的结构化数据。这天学明白：Python 怎么读写文件、JSON 是什么、JSON 和 Python dict 怎么互转。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">open() / json / with</span>
+              <span class="tag tag-code">文件 I/O</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 7-1：JSON 数据读写（保存到 day7_json.py）</div>
+<pre>
+import json
+
+# Python 对象 → JSON 字符串
+data = {
+    "name": "NL2SQL Agent",
+    "version": "1.0",
+    "features": ["RAG", "LangGraph", "SSE"],
+    "config": {"timeout": 30, "retries": 3}
+}
+json_str = json.dumps(data, ensure_ascii=False, indent=2)
+print("JSON 字符串：")
+print(json_str)
+
+# JSON 字符串 → Python 对象
+parsed = json.loads(json_str)
+print("\n解析后读取：")
+print(f"名字：{parsed['name']}")
+print(f"特点：{', '.join(parsed['features'])}")
+
+# === 你的任务 ===
+# a) 把上面的 data 保存到文件 data.json
+# b) 再从 data.json 读回来，检查读回来的 name 和原来一样
+# c) 给配置文件加上一个新字段："max_tokens": 2048
+</pre>
+              <div class="verify-hint">校验：运行后 data.json 文件存在且内容正确，<code>parsed['name']</code> 等于 <code>data['name']</code> → ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 7-2：读写 saas_bi_schema.py（认识项目数据）</div>
+<pre>
+# 打开 backend/schemas/saas_bi_schema.py
+# 找到 SAAS_BI_SCHEMA 变量（一个大列表）
+# 任务：写一个脚本 schema_summary.py，完成以下任务：
+
+# a) 读取 SAAS_BI_SCHEMA，找出所有表名，打印出来
+# b) 找 fact_workspace 表，数它有多少个字段
+# c) 把 fact_workspace 的所有字段打印成表格格式：
+#    | 字段名 | 类型 | 含义 |
+#    |--------|------|------|
+#    | org_id | VARCHAR | 组织ID |
+</pre>
+              <div class="verify-hint">校验：运行后打印出 fact_workspace 的所有字段表格 → ✅ 完成</div>
+            </div>
           </div>
         </div>
 
+        <!-- Day 8 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">3</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">8</div>
           <div>
-            <div class="day-title">深度阅读 nl2sql_agent.py 状态图</div>
-            <div class="day-desc">对照代码画出完整状态图：classify_intent → retrieve → generate → validate → execute → chart。理解每个节点的输入/输出，以及 state 是如何在节点间传递的。重点：State 类型定义。</div>
-            <div class="day-tags"><span class="tag tag-code">代码阅读</span><span class="tag tag-project">nl2sql_agent.py</span></div>
-            <div class="day-time">⏱ ~2h</div>
+            <div class="day-title">Day 8 · HTTP 请求 & API — 程序怎么和服务器说话</div>
+            <div class="day-desc">NL2SQL 本质是一个 API 服务：前端发请求 → 后端处理 → 返回 JSON。routes.py 里定义了 <code>@router.post("/query")</code> 装饰器。这天学明白：HTTP 是什么、GET 和 POST 的区别、JSON 是 API 的"语言"。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">HTTP / GET / POST / REST</span>
+              <span class="tag tag-code">requests</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 8-1：调用 NL2SQL API（保存到 day8_api.py）</div>
+<pre>
+import requests
+
+# NL2SQL 的 API 地址（确认服务在跑着）
+BASE_URL = "http://localhost:8001/api/v1"
+
+# 健康检查（GET 请求）
+resp = requests.get(f"{BASE_URL}/health")
+print("健康检查：", resp.json())
+
+# 发一个查询（POST 请求）
+resp = requests.post(f"{BASE_URL}/query", json={
+    "question": "各部门用户平均使用时长",
+    "conversation_id": None
+})
+result = resp.json()
+print("\n查询结果：")
+print("SQL:", result.get("generated_sql", "无"))
+print("数据行数:", len(result.get("data", {}).get("rows", [])))
+</pre>
+              <div class="verify-hint">校验：健康检查返回 <code>{"status": "ok"}</code>，查询返回 SQL（即使 SQL 有错也算） → ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 8-2：对比 Java 的 REST API</div>
+<pre>
+# Python FastAPI (@router.post 等于 Java Spring @PostMapping)
+# Java 的 @RestController + @RequestMapping
+# Python 的 @router.post("/query") 作用相同：声明一个 POST 接口
+
+# 任务：
+# 在 routes.py 里找到健康检查接口的代码
+# 尝试用大白话描述：这个接口"收什么请求，返回什么"
+# （写在笔记里）
+</pre>
+              <div class="verify-hint">校验：能说出「收到 GET /api/v1/health，返回 {"status": "ok"}」 → ✅ 完成</div>
+            </div>
           </div>
         </div>
 
+        <!-- Day 9 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">4</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">9</div>
           <div>
-            <div class="day-title">Self-Correction 循环：让 Agent 自我纠错</div>
-            <div class="day-desc">今天学的核心：EXPLAIN 校验 + 重试机制，这是 Agent 自我纠错的经典模式。在项目中找到 <code>_route_after_validation</code> 和 <code>_route_after_execution</code>，理解失败时如何回到生成节点。</div>
-            <div class="day-tags"><span class="tag tag-concept">Self-Correction</span><span class="tag tag-project">重试逻辑</span></div>
-            <div class="day-time">⏱ ~2h</div>
+            <div class="day-title">Day 9 · 数据库 SQL — 查询数据的语言</div>
+            <div class="day-desc">NL2SQL 的核心是"把自然语言转成 SQL"。这天的目标不是精通 SQL，是理解 SQL 能做什么：SELECT 查、WHERE 过滤、GROUP BY 分组、JOIN 关联、COUNT/SUM/AVG 聚合。你不需要手写 SQL（那是 Agent 的工作），但必须能读懂 SQL、知道结果对不对。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">SELECT / WHERE / GROUP BY / JOIN</span>
+              <span class="tag tag-code">SQL 基础</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 9-1：SQL 查询练习（在 DataGrip 或 psql 里运行）</div>
+<pre>
+-- 假设有这张表 fact_workspace:
+-- org_id, user_id, record_date, total_active_time_seconds
+
+-- 1. 查所有数据
+SELECT * FROM fact_workspace LIMIT 10;
+
+-- 2. 查指定租户
+SELECT * FROM fact_workspace WHERE org_id = 'demo_org_001';
+
+-- 3. 按用户分组，计算平均活跃时长
+SELECT user_id, AVG(total_active_time_seconds) as avg_time
+FROM fact_workspace
+WHERE org_id = 'demo_org_001'
+GROUP BY user_id
+ORDER BY avg_time DESC
+LIMIT 5;
+
+-- 4. 查各部门（user_id前3位）的平均活跃时长
+SELECT SUBSTRING(user_id, 1, 3) as dept,
+       AVG(total_active_time_seconds) as avg_time
+FROM fact_workspace
+WHERE org_id = 'demo_org_001'
+GROUP BY SUBSTRING(user_id, 1, 3)
+ORDER BY avg_time DESC;
+
+-- === 你的任务 ===
+-- 在 DataGrip 里跑上面 4 条 SQL，记录每条返回多少行数据
+-- 把结果截图或复制到笔记里
+</pre>
+              <div class="verify-hint">校验：在 DataGrip 里 4 条 SQL 都能成功执行（无红色报错） → ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 9-2：读懂 NL2SQL 生成的 SQL</div>
+<pre>
+# 用练习 8-1 的方式问 NL2SQL：
+# "过去7天各部门使用时长总和是多少"
+# 拿到生成的 SQL
+
+# 任务：
+# a) 数数生成的 SQL 里有多少个 SELECT/WHERE/GROUP BY
+# b) 找出 SQL 里引用的表名（FROM 后面的）
+# c) 拿着这个 SQL 去 DataGrip 里跑，看能不能执行（报错or有数据？）
+# d) 如果报错，把错误信息记在 DEBUG_LOG.md 里
+</pre>
+              <div class="verify-hint">校验：把生成的 SQL 和执行结果记录在 DEBUG_LOG.md → ✅ 完成</div>
+            </div>
           </div>
         </div>
 
+        <!-- Day 10 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">5</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">10</div>
           <div>
-            <div class="day-title">SQL Executor：数据库连接 + SQL 注入防护</div>
-            <div class="day-desc">理解 SQLAlchemy 的 text() 防注入机制（参数化查询）。对比 Java JDBC 的 PreparedStatement，两者原理一致。在项目中找到 <code>sql_executor.py</code>，理解 execute 和 validate_with_explain 的区别。</div>
-            <div class="day-tags"><span class="tag tag-code">数据库</span><span class="tag tag-project">sql_executor.py</span></div>
-            <div class="day-time">⏱ ~2h</div>
+            <div class="day-title">Day 10 · 错误处理 & 调试 — 让程序不崩溃、有迹可循</div>
+            <div class="day-desc">NL2SQL Agent 每次遇到错误不是崩溃，而是记录下来、重试、给用户返回错误信息。这天的核心：try/except 捕获异常、Python 的 raise 抛出异常、logging 输出日志。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">try / except / raise / logging</span>
+              <span class="tag tag-code">调试技巧</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 10-1：错误处理练习（保存到 day10_errors.py）</div>
+<pre>
+def safe_divide(a, b):
+    """安全除法，除数为0时返回 None 而不是崩溃"""
+    try:
+        result = a / b
+        return result
+    except ZeroDivisionError:
+        print("错误：除数不能为0")
+        return None
+    except TypeError:
+        print("错误：类型不对，不能除")
+        return None
+
+print(safe_divide(10, 2))   # 5.0
+print(safe_divide(10, 0))    # 打印错误，返回 None
+print(safe_divide("a", 2))  # 打印错误，返回 None
+
+# === 你的任务 ===
+# 写一个函数 parse_age(input_str)，传入字符串，返回整数年龄
+# 如果输入不是纯数字，捕获异常，返回 None 并打印"无效输入"
+</pre>
+              <div class="verify-hint">校验：<code>parse_age("25")</code> 返回 25，<code>parse_age("abc")</code> 返回 None 并打印"无效输入" → ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 10-2：在 routes.py 里找错误处理</div>
+<pre>
+# 在 routes.py 里找到 try/except 块：
+
+try:
+    result = nl2sql_graph.invoke({...})
+except Exception as e:
+    return QueryResponse(..., error_message=f"Agent 执行失败: {str(e)}")
+
+# 任务：用自己的话说出来
+# "如果 Agent 执行出错了，程序会怎么做？"
+</pre>
+              <div class="verify-hint">校验：能说出"返回错误信息给前端，而不是让服务崩溃" → ✅ 完成</div>
+            </div>
+
+            <div class="milestone-section">
+              <div class="milestone-header">W2 里程碑</div>
+              <div class="milestone-grid">
+                <div class="milestone-item">
+                  <div class="m-title">写出银行账户类</div>
+                  <div class="m-desc">day6_class.py 的 BankAccount 类能存钱、取钱、打印余额</div>
+                </div>
+                <div class="milestone-item">
+                  <div class="m-title">能调用 NL2SQL API</div>
+                  <div class="m-desc">day8_api.py 成功调用 /health 和 /query 接口</div>
+                </div>
+                <div class="milestone-item">
+                  <div class="m-title">在 DataGrip 里跑通 SQL</div>
+                  <div class="m-desc">4 条练习 SQL 都能成功执行，返回数据</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">6</div>
-          <div>
-            <div class="day-title">流式输出 SSE：FastAPI + Server-Sent Events</div>
-            <div class="day-desc">理解 SSE 和 WebSocket 的区别（SSE 单向，服务→客户端推送）。在项目中找到 <code>routes.py</code> 的 /query/stream 接口，对比 Java 的 Flux / SSE 实现。</div>
-            <div class="day-tags"><span class="tag tag-concept">SSE</span><span class="tag tag-project">routes.py</span></div>
-            <div class="day-time">⏱ ~2h</div>
-          </div>
-        </div>
-
-        <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">7</div>
-          <div>
-            <div class="day-title">Week2 总结 + 给 Agent 加一个新节点</div>
-            <div class="day-desc">建议：在状态图中加一个「结果解释」节点，用 LLM 生成自然语言总结分析本次查询结果（类似 ChatBI 的解释能力）。这周核心：Agent = 状态机 + 工具调用 + 自我纠错。</div>
-            <div class="day-tags"><span class="tag tag-project">实践</span><span class="tag tag-reading">周总结</span></div>
-            <div class="day-time">⏱ ~2h · 里程碑</div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="milestone-section">
-        <div class="milestone-header">🏆 Week2 项目里程碑</div>
-        <div class="milestone-grid">
-          <div class="milestone-item">
-            <div class="m-title">画出完整状态图</div>
-            <div class="m-desc">手绘或 Mermaid 画出 Agent 的 6 个节点 + 路由逻辑，能向别人讲清楚</div>
-          </div>
-          <div class="milestone-item">
-            <div class="m-title">添加一个 Agent 节点</div>
-            <div class="m-desc">例如：在 generate 前加「SQL 优化建议」节点，或在 chart 后加「自然语言解读」节点</div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 
   <!-- ═══════════ WEEK 3 ═══════════ -->
-  <div class="week-card" id="week3">
+  <div class="week-card w3" id="week3">
     <div class="week-header" onclick="toggleWeek('week3')">
       <div class="week-num">W3</div>
       <div class="week-info">
-        <div class="week-title">Week 3 · RAG 进阶 + 前沿技术</div>
-        <div class="week-subtitle">目标：掌握生产级 RAG 优化方法</div>
+        <div class="week-title">Week 3 · AI 基础概念 — LLM / Embedding / RAG 是什么</div>
+        <div class="week-subtitle">目标：理解 NL2SQL 背后的技术原理，知道每一步在做什么</div>
       </div>
-      <div class="week-hours">14 天 · 2h/d</div>
+      <div class="week-hours">5 天 · 6h/d</div>
       <div class="week-toggle">▼</div>
     </div>
     <div class="week-body">
       <div class="days-list">
 
+        <!-- Day 11 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">1</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">11</div>
           <div>
-            <div class="day-title">Chunk 策略：如何分块比什么更重要</div>
-            <div class="day-desc">理解固定窗口、语义段落、层级分块三种策略。分析项目中的 Schema 分块方式（表级 vs 字段级），理解为什么两种都要。在 <code>schema_indexer.py</code> 中添加一种新的分块策略。</div>
-            <div class="day-tags"><span class="tag tag-concept">Chunk</span><span class="tag tag-project">schema_indexer.py</span></div>
-            <div class="day-time">⏱ ~2h</div>
+            <div class="day-title">Day 11 · LLM 是什么 — 不思考，只"补全"</div>
+            <div class="day-desc">大语言模型（LLM）本质是一个"超级文本补全器"：给它前半句话，它预测后半句。理解这个本质，就能理解为什么 prompt 如此重要——prompt 就是"告诉模型你在什么场景下补全"。NL2SQL Agent 用 LLM 做两件事：生成 SQL、生成自然语言回答。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">LLM / GPT / Token / Prompt</span>
+              <span class="tag tag-code">API 调用</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 11-1：亲手调用 LLM API（保存到 day11_llm.py）</div>
+<pre>
+import os
+# 确保 .env 文件里有 OPENAI_API_KEY=sk-xxx （或者用免费的 Ollama）
+from langchain_openai import ChatOpenAI
+
+llm = ChatOpenAI(
+    model="gpt-4o-mini",          # 或 "gpt-3.5-turbo"
+    temperature=0.1,              # 0=严谨，1=有创意
+)
+
+# 最简单的调用
+response = llm.invoke("用一句话解释什么是大语言模型")
+print("回答：", response.content)
+
+# 给它一个角色（system prompt）
+llm_with_role = ChatOpenAI(model="gpt-4o-mini", temperature=0.1)
+messages = [
+    {"role": "system", "content": "你是一个SQL专家，用简单的中文回答"},
+    {"role": "user", "content": "什么是SELECT语句？"}
+]
+response2 = llm_with_role.invoke(messages)
+print("\n角色回答：", response2.content)
+</pre>
+              <div class="verify-hint">校验：运行后看到 LLM 的文字回答（不需要正确，能收到回复就算成功）→ ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 11-2：理解 LLM 生成 SQL 的过程</div>
+<pre>
+# 打开 nl2sql_agent.py，找到 SYSTEM_PROMPT（很长的一大段字符串）
+
+# 任务：
+# a) 数数 SYSTEM_PROMPT 里出现了多少次 "fact_workspace"
+# b) 找一句最严格的限制（比如"严禁..."开头的）
+# c) 理解：为什么要在 prompt 里写这些限制？
+
+# 提示：LLM 会"臆造"列名（编造不存在的字段）
+# SYSTEM_PROMPT 里的限制就是在告诉 LLM："你不许乱写，只能用这个Schema里的字段"
+</pre>
+              <div class="verify-hint">校验：能找到至少 2 条约束规则，并解释为什么需要它们 → ✅ 完成</div>
+            </div>
           </div>
         </div>
 
+        <!-- Day 12 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">2</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">12</div>
           <div>
-            <div class="day-title">混合检索：向量 + BM25 关键词</div>
-            <div class="day-desc">纯向量检索对专有名词（如列名、表名）不友好，BM25 关键词检索可以弥补。理解 RRF（Reciprocal Rank Fusion）融合方法。项目当前是纯向量检索，可以尝试加上 BM25。</div>
-            <div class="day-tags"><span class="tag tag-concept">混合检索</span><span class="tag tag-project">retriever.py</span></div>
-            <div class="day-time">⏱ ~2h</div>
+            <div class="day-title">Day 12 · Embedding — 把文字变成数字（向量）</div>
+            <div class="day-desc">Embedding 是 NL2SQL 项目的"感知层"：把用户的问题和数据库的 Schema 都转成向量，然后在向量空间里找"距离最近"的配对。语义相近 → 距离近。这就是为什么问"各部门使用时长"能找到 fact_workspace 表的 total_active_time_seconds 字段。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">Embedding / 向量 / 语义相似</span>
+              <span class="tag tag-project">embedding.py</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 12-1：计算两句话的相似度（保存到 day12_embedding.py）</div>
+<pre>
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# 用最简单的 TF-IDF 代替真正的 Embedding（零配置）
+texts = [
+    "各部门用户平均使用时长",
+    "每个部门员工的活跃时间",
+    "今天天气怎么样",
+    "明天的会议安排",
+]
+
+vectorizer = TfidfVectorizer()
+vectors = vectorizer.fit_transform(texts).toarray()
+
+import numpy as np
+
+def cosine_sim(a, b):
+    """计算两个向量的余弦相似度"""
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b) + 1e-9)
+
+print("各部门使用时长 vs 活跃时间:", cosine_sim(vectors[0], vectors[1]))
+print("各部门使用时长 vs 天气:", cosine_sim(vectors[0], vectors[2]))
+print("活跃时间 vs 天气:", cosine_sim(vectors[1], vectors[2]))
+print("会议安排 vs 天气:", cosine_sim(vectors[3], vectors[2]))
+</pre>
+              <div class="verify-hint">校验：前两个相似度 > 0.5，后两个 < 0.3（语义相近的分数高） → ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 12-2：在 embedding.py 里找 Embedding 模型配置</div>
+<pre>
+# 打开 backend/rag/embedding.py，找到 EmbeddingModel 类
+
+# 任务：回答以下问题
+# a) 默认用的是什么 Embedding 模型？（提示：搜索 "_provider"）
+# b) 如果要换成 OpenAI 的 embedding（text-embedding-3-small），要改什么？
+# c) 模型的向量维度是多少？（hint: 搜索 "dimension" 或 "_embed_dimension"）
+</pre>
+              <div class="verify-hint">校验：能说出：a) 默认 HuggingFace SentenceTransformer b) 要改 _provider 和相关配置 c) 维度是 768 → ✅ 完成</div>
+            </div>
           </div>
         </div>
 
+        <!-- Day 13 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">3</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">13</div>
           <div>
-            <div class="day-title">重排序（ReRanking）：精排优于粗排</div>
-            <div class="day-desc">理解两阶段检索：粗排（向量 ANN）→ 精排（Cross-Encoder ReRanker）。Cohere Rerank 是最流行的方案。尝试给项目加一个 ReRanker，将 Top20 检索结果重排为 Top5。</div>
-            <div class="day-tags"><span class="tag tag-concept">ReRanking</span><span class="tag tag-code">可选升级</span></div>
-            <div class="day-time">⏱ ~2h</div>
+            <div class="day-title">Day 13 · 向量数据库 Milvus — 快速找到相关内容</div>
+            <div class="day-desc">Milvus 是一个专门存向量和搜向量的数据库。NL2SQL 项目用 Milvus 存储"Schema 块"的向量，用户提问时，把问题转成向量，去 Milvus 里找"最相似"的 Schema 块。这天学会：Milvus 的基本操作（存进去、搜出来），理解为什么不用普通数据库做这件事。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">Milvus / 向量检索 / ANN</span>
+              <span class="tag tag-project">schema_indexer.py</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 13-1：用 Milvus Lite 存储和检索向量（保存到 day13_milvus.py）</div>
+<pre>
+from pymilvus import MilvusClient, DataType
+import numpy as np
+
+client = MilvusClient(uri="./milvus_demo.db")
+
+# 定义 Schema
+schema = MilvusClient.create_schema(auto_id=True, enable_dynamic_field=True)
+schema.add_field(field_name="id", datatype=DataType.INT64, is_primary=True)
+schema.add_field(field_name="vector", datatype=DataType.FLOAT_VECTOR, dim=4)
+schema.add_field(field_name="description", datatype=DataType.VARCHAR, max_length=200)
+
+# 创建 Collection
+if client.has_collection("demo"):
+    client.drop_collection("demo")
+client.create_collection(collection_name="demo", schema=schema)
+
+# 插入数据
+vectors = [
+    [0.1, 0.2, 0.3, 0.4],
+    [0.9, 0.8, 0.7, 0.6],
+    [0.5, 0.5, 0.5, 0.5],
+]
+descs = ["活跃用户时长数据", "天气查询", "部门统计"]
+entities = [{"vector": v, "description": d} for v, d in zip(vectors, descs)]
+client.insert(collection_name="demo", data=entities)
+
+# 检索
+query_vec = [[0.12, 0.22, 0.32, 0.42]]  # 接近第一条
+results = client.search(
+    collection_name="demo",
+    data=query_vec,
+    limit=2,
+    output_fields=["description"]
+)
+
+print("检索结果：")
+for r in results[0]:
+    print(f"  {r['entity']['description']} (距离: {r['distance']:.4f})")
+</pre>
+              <div class="verify-hint">校验：运行后"活跃用户时长数据"排在第一位，且距离 &lt; 0.1 → ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 13-2：找到 NL2SQL 项目里的 Milvus 配置</div>
+<pre>
+# 打开 backend/config.py，找到 Milvus 相关配置
+
+# 任务：
+# a) Milvus 数据存在哪里？（hint: 搜索 milvus_data_dir）
+# b) Schema collection 和 Metrics collection 分别叫什么名字？
+# c) 用的是什么索引类型和相似度度量？
+</pre>
+              <div class="verify-hint">校验：能回答 a) 存成 .db 文件 b) 两个 collection 名字 c) 索引类型是 AUTOINDEX，度量是 COSINE → ✅ 完成</div>
+            </div>
           </div>
         </div>
 
+        <!-- Day 14 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">4</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">14</div>
           <div>
-            <div class="day-title">Function Calling / Tool Use：让 Agent 调用工具</div>
-            <div class="day-desc">这是 2024 年最实用的 Agent 能力。理解 OpenAI Function Calling 格式，对比 LangGraph 的 Tool 机制。在项目中，Agent 其实就是在做 Function Calling（调用 SQL Executor）。</div>
-            <div class="day-tags"><span class="tag tag-concept">Function Calling</span></div>
-            <div class="day-time">⏱ ~2h</div>
+            <div class="day-title">Day 14 · RAG 流程 — 把整个链路串起来</div>
+            <div class="day-desc">RAG（检索增强生成）= R（Retrieval，检索）+ AG（Augmented Generation，生成）。NL2SQL 的 RAG 流程：用户问题 → Embed → Milvus 检索 Schema → 把 Schema 塞进 LLM prompt → LLM 生成 SQL。这天把之前学的所有碎片串成一条完整链路。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">RAG / LangChain / Prompt 组装</span>
+              <span class="tag tag-project">retriever.py</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 14-1：手写一个简化版 RAG（保存到 day14_rag.py）</div>
+<pre>
+# 简化版 NL2SQL RAG（不依赖 Milvus，纯内存演示）
+
+documents = [
+    {"text": "fact_workspace: org_id(租户ID), user_id(用户ID), record_date(日期), total_active_time_seconds(用户活跃时长)",
+     "table": "fact_workspace"},
+    {"text": "fact_meeting: org_id, meeting_id, duration_minutes, start_time, host_user_id",
+     "table": "fact_meeting"},
+    {"text": "fact_calling: org_id, caller_id, call_duration_seconds, call_date",
+     "table": "fact_calling"},
+]
+
+# 用户问题
+question = "各部门平均使用时长"
+
+# 用 TF-IDF 模拟 Embedding 检索
+from sklearn.feature_extraction.text import TfidfVectorizer
+vectorizer = TfidfVectorizer()
+docs_texts = [d["text"] for d in documents]
+vectors = vectorizer.fit_transform(docs_texts).toarray()
+q_vec = vectorizer.transform([question]).toarray()[0]
+
+import numpy as np
+similarities = [np.dot(q_vec, v) / (np.linalg.norm(q_vec) * np.linalg.norm(v) + 1e-9) for v in vectors]
+best_idx = int(np.argmax(similarities))
+best_doc = documents[best_idx]
+print(f"最相关的表: {best_doc['table']}")
+print(f"相似度: {similarities[best_idx]:.4f}")
+
+# === 你的任务 ===
+# 改 question 为 "会议总时长"，看看能不能找到 fact_meeting
+# 再改成 "通话记录"，看看结果
+</pre>
+              <div class="verify-hint">校验：三种问题分别找到对应表：使用时长→fact_workspace，会议→fact_meeting，通话→fact_calling → ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 14-2：画出 NL2SQL 的 RAG 流程图</div>
+<pre>
+# 完整流程（在 notes.drawio 或大白纸上画）：
+
+用户问题
+   ↓
+Embedding（转成向量）
+   ↓
+Milvus 检索（找最相关的 Schema 块）
+   ↓
+组装 Prompt（用户问题 + Schema + 指标定义 + SQL 示例）
+   ↓
+LLM 生成 SQL
+   ↓
+SQL 校验（EXPLAIN 验证）
+   ↓
+执行 SQL（PostgreSQL）
+   ↓
+返回结果给前端
+
+# 任务：把这个流程图画出来（可以用 draw.io / Excalidraw / 甚至手画拍照）
+# 每个箭头旁边写一句大白话解释
+</pre>
+              <div class="verify-hint">校验：流程图包含 8 个节点，能向别人完整解释每步在做什么 → ✅ 完成</div>
+            </div>
           </div>
         </div>
 
+        <!-- Day 15 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">5</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">15</div>
           <div>
-            <div class="day-title">多租户安全：RAG 中的数据隔离</div>
-            <div class="day-desc">理解 RAG 场景下的多租户问题：不同租户的 Schema 相同，但数据不同。Agent 用 org_id 过滤，这是最简单的方案。进阶：租户专属 Embedding 模型（太贵，不推荐）。</div>
-            <div class="day-tags"><span class="tag tag-concept">安全架构</span><span class="tag tag-project">routes.py</span></div>
-            <div class="day-time">⏱ ~2h</div>
+            <div class="day-title">Day 15 · Prompt Engineering — 怎么和 LLM "说话"让它做对</div>
+            <div class="day-desc">Prompt 是 NL2SQL 项目的"核心调参层"。同样一个问题，不同的 prompt 会生成完全不同的 SQL。这天学会：给角色（system prompt）、给例子（few-shot）、给限制（严禁）、给格式（输出 JSON）。每个原则都有具体的代码对照。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">System Prompt / Few-shot / 格式约束</span>
+              <span class="tag tag-project">nl2sql_agent.py</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 15-1：对比不同 Prompt 的效果（保存到 day15_prompts.py）</div>
+<pre>
+from langchain_openai import ChatOpenAI
+
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+
+# Prompt A：模糊版本
+prompt_a = """
+用户问：各部门用户平均使用时长
+请生成SQL。
+"""
+
+# Prompt B：详细版本（带角色+Schema+限制）
+prompt_b = """
+你是一个专业的 SQL 生成助手。
+已知数据库有一个表 fact_workspace，包含以下字段：
+- org_id VARCHAR: 租户ID
+- user_id VARCHAR: 用户ID
+- record_date DATE: 记录日期
+- total_active_time_seconds BIGINT: 用户活跃时长（秒）
+
+生成SQL，要求：
+1. 必须有 WHERE org_id = '{org_id}' 过滤
+2. 只用上面列出的字段名
+3. 禁止臆造不存在的列名
+4. 输出纯SQL，不要解释
+
+用户问：各部门用户平均使用时长
+SQL：
+"""
+
+for i, (name, prompt) in enumerate([("模糊Prompt", prompt_a), ("详细Prompt", prompt_b)], 1):
+    resp = llm.invoke(prompt)
+    print(f"\n{'='*50}")
+    print(f"Prompt {i} ({name}):")
+    print(resp.content)
+    # 检查生成的 SQL 有没有臆造列名
+    sql = resp.content.lower()
+    if "usage_duration" in sql or "activity_date" in sql:
+        print("⚠️ 检测到臆造列名！")
+</pre>
+              <div class="verify-hint">校验：详细 Prompt 生成的 SQL 没有臆造列名，模糊 Prompt 可能出现臆造 → 对比两者差异，记在笔记里</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 15-2：给 NL2SQL Agent 加一条 Prompt 约束</div>
+<pre>
+# 打开 nl2sql_agent.py，找到 SYSTEM_PROMPT
+
+# 任务：
+# 在 SYSTEM_PROMPT 里加一条新规则：
+# "【严禁】如果用户问的是平均数，SQL 里必须用 AVG() 聚合函数"
+# 如果问的是总数，必须用 SUM()
+# 如果问的是计数，必须用 COUNT()
+
+# 然后重启服务，用 NL2SQL 问：
+# "各部门用户平均使用时长" → 检查有没有 AVG
+# "各部门使用时长总和" → 检查有没有 SUM
+# 把结果记在 DEBUG_LOG.md 里
+</pre>
+              <div class="verify-hint">校验：修改 SYSTEM_PROMPT 后重启 Agent，用两个问题测试并记录结果 → ✅ 完成</div>
+            </div>
+
+            <div class="milestone-section">
+              <div class="milestone-header">W3 里程碑</div>
+              <div class="milestone-grid">
+                <div class="milestone-item">
+                  <div class="m-title">亲手调用 LLM API</div>
+                  <div class="m-desc">day11_llm.py 能成功调用 LLM 并收到回复</div>
+                </div>
+                <div class="milestone-item">
+                  <div class="m-title">理解 Embedding 原理</div>
+                  <div class="m-desc">能用 TF-IDF 计算两句话的语义相似度，并解释为什么 Embedding 比关键词匹配更好</div>
+                </div>
+                <div class="milestone-item">
+                  <div class="m-title">画出完整 RAG 流程图</div>
+                  <div class="m-desc">能用大白话解释 NL2SQL 的 RAG 流程，不卡在任何一步</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">6</div>
-          <div>
-            <div class="day-title">评估体系：如何衡量 RAG 质量</div>
-            <div class="day-desc">学习 RAG 三指标：Context Precision / Recall + Answer Correctness。学习用 LLM-as-Judge 做自动化评估（让 GPT-4 评估另一个 GPT-4 的回答）。为项目写一个简单的 SQL 正确性评估脚本。</div>
-            <div class="day-tags"><span class="tag tag-concept">RAG 评估</span><span class="tag tag-code">脚本开发</span></div>
-            <div class="day-time">⏱ ~2h</div>
-          </div>
-        </div>
-
-        <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">7</div>
-          <div>
-            <div class="day-title">Week3 总结 + RAG 优化实战</div>
-            <div class="day-desc">本周核心：RAG 质量 = Chunk 策略 × 检索质量 × 上下文利用率。动手优化一个环节（推荐：混合检索 + BM25）。这周的内容已经是 2025-2026 年生产级 RAG 的标配。</div>
-            <div class="day-tags"><span class="tag tag-project">实践</span><span class="tag tag-reading">周总结</span></div>
-            <div class="day-time">⏱ ~2h · 里程碑</div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="milestone-section">
-        <div class="milestone-header">🏆 Week3 项目里程碑</div>
-        <div class="milestone-grid">
-          <div class="milestone-item">
-            <div class="m-title">混合检索上线</div>
-            <div class="m-desc">给 RAG 加上 BM25 关键词召回，用 RRF 融合向量和 BM25 结果</div>
-            <div class="m-file">backend/rag/retriever.py</div>
-          </div>
-          <div class="milestone-item">
-            <div class="m-title">SQL 正确性评估脚本</div>
-            <div class="m-desc">用 LLM-as-Judge 自动评估生成的 SQL 是否正确统计了正确指标</div>
-            <div class="m-file">scripts/eval_sql.py</div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 
   <!-- ═══════════ WEEK 4 ═══════════ -->
-  <div class="week-card" id="week4">
+  <div class="week-card w4" id="week4">
     <div class="week-header" onclick="toggleWeek('week4')">
       <div class="week-num">W4</div>
       <div class="week-info">
-        <div class="week-title">Week 4 · 前沿扩展 + 项目收尾</div>
-        <div class="week-subtitle">目标：接触最新技术方向，确定个人技术栈</div>
+        <div class="week-title">Week 4 · LangGraph 状态机 — Agent 的"大脑"</div>
+        <div class="week-subtitle">目标：理解 Agent 如何把多个步骤串联起来、自我纠错</div>
       </div>
-      <div class="week-hours">14 天 · 2h/d</div>
+      <div class="week-hours">5 天 · 6h/d</div>
       <div class="week-toggle">▼</div>
     </div>
     <div class="week-body">
       <div class="days-list">
 
+        <!-- Day 16 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">1</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">16</div>
           <div>
-            <div class="day-title">MCP（Model Context Protocol）：Agent 互联标准</div>
-            <div class="day-desc">MCP 是 2024 年底最火热的协议，让 Agent 可以调用任何外部工具（数据库、API、文件系统）。理解它的 Host/Client/Server 架构。这和 Java 的 SPI 机制有异曲同工之处。</div>
-            <div class="day-tags"><span class="tag tag-concept">MCP 前沿</span></div>
-            <div class="day-time">⏱ ~2h</div>
+            <div class="day-title">Day 16 · 状态机是什么 — 用生活例子理解</div>
+            <div class="day-desc">状态机 = 有限个"状态" + 状态之间的"规则"。最生活化的例子：自动售货机：投币→选商品→出货→找零→结束。LangGraph 把这个思想用在 Agent 上：每个节点是一个处理步骤，边是路由规则。NL2SQL Agent 就是一个有 6 个节点的状态机。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">状态机 / Node / Edge</span>
+              <span class="tag tag-project">nl2sql_agent.py</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 16-1：手写一个简化状态机（保存到 day16_fsm.py）</div>
+<pre>
+# 用 Python 字典模拟一个简单状态机：订单处理
+
+def handle_order(state):
+    """处理订单状态"""
+    action = state["action"]
+    if action == "create":
+        state["status"] = "pending"
+        return "check_payment"
+    elif action == "cancel":
+        state["status"] = "cancelled"
+        return "end"
+    raise ValueError(f"未知动作: {action}")
+
+def check_payment(state):
+    """检查支付"""
+    if state.get("paid"):
+        state["status"] = "paid"
+        return "ship"
+    else:
+        state["status"] = "payment_failed"
+        return "notify_user"
+
+def ship(state):
+    state["status"] = "shipped"
+    return "end"
+
+def notify_user(state):
+    print("请支付货款")
+    return "end"
+
+# 路由表：状态名 → 处理函数
+ROUTES = {
+    "handle_order": handle_order,
+    "check_payment": check_payment,
+    "ship": ship,
+    "notify_user": notify_user,
+}
+
+# 模拟流程
+state = {"action": "create", "paid": True}
+current = "handle_order"
+while current != "end":
+    print(f"状态: {current} → {state}")
+    current = ROUTES[current](state)
+print(f"最终: {state}")
+</pre>
+              <div class="verify-hint">校验：运行后依次经过 handle_order → check_payment → ship → end，最终 status="shipped" → ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 16-2：在 nl2sql_agent.py 里找状态机节点</div>
+<pre>
+# 搜索 "def " 在 nl2sql_agent.py 里，数一数有多少个函数
+
+# 任务：每个函数名旁边，写一句大白话解释它是干什么的
+# 例如：
+# def classify_intent(...)  → 对用户问题做意图分类（指标查询？趋势分析？）
+# def retrieve_context(...) → 从 Milvus 检索相关的 Schema
+# def generate_sql(...)     → 让 LLM 生成 SQL
+# def validate_sql(...)     → 校验 SQL 是否合法
+# def execute_sql(...)     → 执行 SQL
+# def select_chart(...)     → 选择图表类型
+</pre>
+              <div class="verify-hint">校验：能说出所有 6 个节点的名称和作用 → ✅ 完成</div>
+            </div>
           </div>
         </div>
 
+        <!-- Day 17 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">2</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">17</div>
           <div>
-            <div class="day-title">Memory / 长期记忆：让 Agent 记住上下文</div>
-            <div class="day-desc">理解 Agent Memory 三层：Working Memory（State）、Session Memory（会话）、Long-term Memory（向量数据库持久化）。用向量数据库存历史对话，实现「记住上次查询」的能力。</div>
-            <div class="day-tags"><span class="tag tag-concept">Agent Memory</span></div>
-            <div class="day-time">⏱ ~2h</div>
+            <div class="day-title">Day 17 · LangGraph 入门 — 用代码画状态机</div>
+            <div class="day-desc">LangGraph 是 LangChain 团队出的状态机框架。NL2SQL Agent 用它定义状态图：哪些节点（node）、节点之间怎么路由（edge/conditional_edge）。这天学明白：StateGraph 的基本用法、add_node/add_edge 的作用。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">StateGraph / add_node / add_edge</span>
+              <span class="tag tag-code">LangGraph</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 17-1：写一个最简单的 LangGraph（保存到 day17_langgraph.py）</div>
+<pre>
+from langgraph.graph import StateGraph, END
+from typing import TypedDict
+
+class MyState(TypedDict):
+    message: str
+    step_count: int
+
+def node_a(state: MyState) -> MyState:
+    state["step_count"] += 1
+    state["message"] = state["message"] + " → A"
+    return state
+
+def node_b(state: MyState) -> MyState:
+    state["step_count"] += 1
+    state["message"] = state["message"] + " → B"
+    return state
+
+def should_continue(state: MyState) -> str:
+    """根据 step_count 决定下一步"""
+    if state["step_count"] &lt; 2:
+        return "node_a"
+    return END
+
+# 创建图
+graph = StateGraph(MyState)
+graph.add_node("node_a", node_a)
+graph.add_node("node_b", node_b)
+graph.set_entry_point("node_a")
+graph.add_conditional_edges("node_a", should_continue, {"node_a": "node_a", END: END})
+graph.add_edge("node_b", END)
+
+# 运行
+app = graph.compile()
+result = app.invoke({"message": "开始", "step_count": 0})
+print("最终状态:", result)
+print("经过的节点:", result["message"])
+</pre>
+              <div class="verify-hint">校验：运行后 message 为 "开始 → A → A → B"，step_count 为 3 → ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 17-2：在 nl2sql_agent.py 里找 LangGraph 配置</div>
+<pre>
+# 搜索 nl2sql_agent.py 里的 add_node 和 add_edge
+
+# 任务：把 NL2SQL 的状态图画出来（用 Mermaid 语法）
+# Mermaid 语法示例：
+# flowchart TD
+#     A[classify_intent] --> B[retrieve_context]
+#     B --> C{generate_sql}
+#     C -->|valid| D[execute_sql]
+#     C -->|invalid| C
+
+# 把这个图粘贴到 https://mermaid.live/ 预览
+</pre>
+              <div class="verify-hint">校验：在 mermaid.live 里成功渲染出 NL2SQL 状态图，包含所有 6 个节点和路由关系 → ✅ 完成</div>
+            </div>
           </div>
         </div>
 
+        <!-- Day 18 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">3</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">18</div>
           <div>
-            <div class="day-title">LLM Observability：LangSmith / OpenTelemetry</div>
-            <div class="day-desc">理解 LLM 可观测性三件套：Trace（链路追踪）+ Metrics（指标）+ Logging（日志）。用 LangSmith 追踪 Agent 的每个节点耗时和 token 消耗。对比 Java 的 SkyWalking / Jaeger。</div>
-            <div class="day-tags"><span class="tag tag-concept">可观测性</span></div>
-            <div class="day-time">⏱ ~2h</div>
+            <div class="day-title">Day 18 · Self-Correction — Agent 的自我纠错能力</div>
+            <div class="day-desc">Self-Correction（自我纠错）是 Agent 最核心的能力之一。NL2SQL Agent 在 SQL 生成后不直接执行，而是先校验（EXPLAIN），失败了让 LLM 重写。最多重试 3 次。这天的本质：让 Agent 有"试错→反馈→修正"的循环，不是一次性做对。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">Self-Correction / Retry / 反馈循环</span>
+              <span class="tag tag-project">重试逻辑</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 18-1：实现一个带重试的函数（保存到 day18_retry.py）</div>
+<pre>
+import random
+
+def call_api_may_fail():
+    """模拟可能失败的 API 调用，成功率 40%"""
+    if random.random() &lt; 0.4:
+        return {"success": True, "data": "查询结果：各部门使用时长"}
+    return {"success": False, "error": "列名不存在"}
+
+def call_with_retry(max_retries=3):
+    """最多重试 max_retries 次"""
+    for attempt in range(1, max_retries + 1):
+        result = call_api_may_fail()
+        if result["success"]:
+            print(f"✅ 第 {attempt} 次成功")
+            return result["data"]
+        print(f"❌ 第 {attempt} 次失败: {result['error']}，重试中...")
+    print("已达最大重试次数，返回错误")
+    return None
+
+# 测试
+result = call_with_retry()
+print("最终结果:", result)
+</pre>
+              <div class="verify-hint">校验：运行 5 次，至少有 1 次在第 2 或 3 次成功，有 1 次在 3 次后仍失败 → ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 18-2：在 NL2SQL Agent 里找重试逻辑</div>
+<pre>
+# 在 nl2sql_agent.py 里找 _route_after_validation 和 _route_after_execution
+
+# 任务：
+# a) 如果校验失败（sql_valid=False），路由到哪个节点？
+# b) retry_count 最大能到多少？（搜索 max_sql_retries）
+# c) 当 retry_count 超过上限后，Agent 会返回什么？
+# d) 把这个重试逻辑用大白话写出来：
+
+# "用户提问 → 生成SQL → 校验SQL → 如果不合法 → "
+# "重试（最多X次）→ 如果还不行 → 返回错误信息"
+</pre>
+              <div class="verify-hint">校验：能完整描述重试流程，包括"最多几次"、"失败后返回什么" → ✅ 完成</div>
+            </div>
           </div>
         </div>
 
+        <!-- Day 19 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">4</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">19</div>
           <div>
-            <div class="day-title">本地模型：Ollama / vLLM / LM Studio</div>
-            <div class="day-desc">理解推理框架的区别：Ollama（易用）vs vLLM（高性能）vs LM Studio（GUI）。尝试用 Ollama 跑一个 qwen2.5:14b 或更大的模型，对比和 GPT-4o 的效果差距。</div>
-            <div class="day-tags"><span class="tag tag-concept">本地推理</span><span class="tag tag-code">安装配置</span></div>
-            <div class="day-time">⏱ ~2h</div>
+            <div class="day-title">Day 19 · SQL 校验层 — 真实数据库验证</div>
+            <div class="day-desc">NL2SQL Agent 的 SQL 校验分为两层：第一层是字符串规则检查（是否 SELECT 开头、是否有 org_id），第二层是真实数据库检查（EXPLAIN）。第二层才能真正发现"列名不存在"这种错误。这天彻底理解为什么两层都需要。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">EXPLAIN / SQL 注入防护 / 参数化查询</span>
+              <span class="tag tag-project">sql_executor.py</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 19-1：用 EXPLAIN 验证 SQL（保存到 day19_explain.py）</div>
+<pre>
+from sqlalchemy import create_engine, text
+
+engine = create_engine("postgresql+psycopg2://user:pass@localhost:5432/dbname")
+
+# 假设这两条 SQL 是 LLM 生成的，我们要验证它们
+test_sqls = [
+    "SELECT org_id, AVG(total_active_time_seconds) FROM fact_workspace WHERE org_id = 'demo_org_001' GROUP BY org_id",  # 正确
+    "SELECT org_id, AVG(usage_duration_seconds) FROM fact_workspace WHERE org_id = 'demo_org_001' GROUP BY org_id",    # 错误：usage_duration_seconds 不存在
+]
+
+for sql in test_sqls:
+    explain_sql = f"EXPLAIN (COSTS OFF) {sql}"
+    try:
+        with engine.connect() as conn:
+            conn.execute(text(explain_sql))
+        print(f"✅ SQL 有效: {sql[:60]}...")
+    except Exception as e:
+        print(f"❌ SQL 无效: {sql[:60]}...")
+        print(f"   错误: {str(e)[:100]}")
+</pre>
+              <div class="verify-hint">校验：正确的 SQL 显示 ✅，错误的 SQL 显示 ❌ 并给出错误信息 → ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 19-2：理解 SQLAlchemy 参数化查询（防注入）</div>
+<pre>
+# 在 sql_executor.py 里找 execute() 方法，理解为什么要用 text() 包装 SQL
+
+# SQL 注入例子（危险❌）：
+user_input = "demo_org_001; DROP TABLE fact_workspace; --"
+bad_sql = f"SELECT * FROM fact_workspace WHERE org_id = '{user_input}'"
+
+# 参数化查询（安全✅）：
+# cursor.execute("SELECT * FROM fact_workspace WHERE org_id = %s", (user_input,))
+# SQLAlchemy 的 text() + 参数化 = 同样的效果
+
+# 任务：
+# a) 在 sql_executor.py 里找 execute() 方法，数数有几处使用了 text()
+# b) 理解：为什么 org_id 是字符串，但它不是直接拼进 SQL 里？
+</pre>
+              <div class="verify-hint">校验：能找到 execute() 方法，解释为什么用 text() 可以防 SQL 注入 → ✅ 完成</div>
+            </div>
           </div>
         </div>
 
+        <!-- Day 20 -->
         <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">5</div>
+          <div class="day-dot" onclick="this.classList.toggle('done')">20</div>
           <div>
-            <div class="day-title">项目总结：性能优化 + 工程化</div>
-            <div class="day-desc">优化方向：LLM 响应缓存（避免重复生成相同 SQL）、连接池优化、向量检索 TopK 调参。理解「AI Native 应用」和传统应用的区别：传统是确定逻辑，AI 是概率输出。</div>
-            <div class="day-tags"><span class="tag tag-project">性能优化</span></div>
-            <div class="day-time">⏱ ~2h</div>
-          </div>
-        </div>
+            <div class="day-title">Day 20 · SSE 流式输出 — 边想边说，不用等全部生成</div>
+            <div class="day-desc">SSE（Server-Sent Events）让后端可以"推送"数据到前端，不需要前端一直轮询。NL2SQL Agent 的 /query/stream 接口就是用 SSE，用户能看到 Agent"打字"一样逐步输出 SQL，比等 10 秒再看到完整结果体验好得多。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">SSE / Streaming / AsyncIO</span>
+              <span class="tag tag-project">routes.py</span>
+            </div>
 
-        <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">6</div>
-          <div>
-            <div class="day-title">技术博客 + 简历更新</div>
-            <div class="day-desc">写一篇技术博客（1500+ 字）：「用 LangGraph + RAG 打造 NL2SQL 查询助手」。把项目整理成简历可写的内容：技术栈、核心难点、个人贡献。</div>
-            <div class="day-tags"><span class="tag tag-reading">写作</span><span class="tag tag-project">博客输出</span></div>
-            <div class="day-time">⏱ ~2h</div>
-          </div>
-        </div>
+            <div class="exercise-block">
+              <div class="ex-title">练习 20-1：写一个最简单的 SSE 服务（保存到 day20_sse.py）</div>
+<pre>
+from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
+import asyncio, json, time
 
-        <div class="day-row">
-          <div class="day-dot" onclick="this.classList.toggle('done')" title="点击标记完成">7</div>
-          <div>
-            <div class="day-title">Week4 收尾 + 新项目构思</div>
-            <div class="day-desc">基于学到的技术，构思下一个项目（建议方向：客服 Agent、代码审查助手、本地文档问答）。完成 DEBUG_LOG.md 总结，整理 30 天的学习笔记。</div>
-            <div class="day-tags"><span class="tag tag-project">收尾</span><span class="tag tag-reading">规划</span></div>
-            <div class="day-time">⏱ ~2h · 里程碑</div>
+app = FastAPI()
+
+@app.get("/stream")
+async def stream_events():
+    """模拟流式输出：每秒推送一个字"""
+    async def event_generator():
+        words = ["你", "好", "，", "这", "是", "一", "个", "流", "式", "响", "应", "！"]
+        for word in words:
+            await asyncio.sleep(0.3)
+            data = json.dumps({"token": word})
+            yield f"data: {data}\n\n"
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+# 运行后访问 http://localhost:8002/stream
+# （可以用 curl http://localhost:8002/stream 查看）
+# 或者在浏览器打开，用 F12 开发者工具看 Network
+</pre>
+              <div class="verify-hint">校验：启动后用浏览器访问 /stream，看到文字逐字出现（不需要前端） → ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 20-2：在 routes.py 里找 SSE 实现</div>
+<pre>
+# 打开 routes.py，找到 /query/stream 接口
+
+# 任务：
+# a) 这个接口返回什么类型？（搜索 EventSourceResponse 或 StreamingResponse）
+# b) async def event_generator() 里的 yield 是什么意思？
+# c) 找到 "EventSourceResponse" 的参数，说说每个参数的作用
+</pre>
+              <div class="verify-hint">校验：能说出 SSE 是"服务器主动推送数据到浏览器"的技术 → ✅ 完成</div>
+            </div>
+
+            <div class="milestone-section">
+              <div class="milestone-header">W4 里程碑</div>
+              <div class="milestone-grid">
+                <div class="milestone-item">
+                  <div class="m-title">能画 NL2SQL 状态图</div>
+                  <div class="m-desc">用 Mermaid 语法画出完整状态机，包含 6 个节点和条件路由</div>
+                </div>
+                <div class="milestone-item">
+                  <div class="m-title">理解 Self-Correction</div>
+                  <div class="m-desc">能完整描述重试逻辑：什么情况下重试、重试几次、失败后怎么办</div>
+                </div>
+                <div class="milestone-item">
+                  <div class="m-title">能写简单 SSE 服务</div>
+                  <div class="m-desc">day20_sse.py 能运行，/stream 接口逐字输出内容</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
       </div>
+    </div>
+  </div>
 
-      <div class="milestone-section">
-        <div class="milestone-header">🏆 Week4 项目里程碑</div>
-        <div class="milestone-grid">
-          <div class="milestone-item">
-            <div class="m-title">技术博客发表</div>
-            <div class="m-desc">在掘金/知乎/个人博客发表 NL2SQL 技术文章，附代码链接</div>
-          </div>
-          <div class="milestone-item">
-            <div class="m-title">个人知识库建成</div>
-            <div class="m-desc">整理 DEBUG_LOG.md + 30 天学习笔记，形成可查阅的知识体系</div>
-          </div>
-          <div class="milestone-item">
-            <div class="m-title">简历更新</div>
-            <div class="m-desc">在简历「项目经历」中加入 NL2SQL BI Agent，附 GitHub 链接</div>
-          </div>
-          <div class="milestone-item">
-            <div class="m-title">下一个项目立项</div>
-            <div class="m-desc">确定下一个 AI 项目方向，列出一周计划</div>
+  <!-- ═══════════ WEEK 5 ═══════════ -->
+  <div class="week-card w5" id="week5">
+    <div class="week-header" onclick="toggleWeek('week5')">
+      <div class="week-num">W5</div>
+      <div class="week-info">
+        <div class="week-title">Week 5 · 项目深度开发 — 亲手改进 NL2SQL</div>
+        <div class="week-subtitle">目标：在项目中动手改代码，不是光看不动手</div>
+      </div>
+      <div class="week-hours">5 天 · 6h/d</div>
+      <div class="week-toggle">▼</div>
+    </div>
+    <div class="week-body">
+      <div class="days-list">
+
+        <!-- Day 21 -->
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')">21</div>
+          <div>
+            <div class="day-title">Day 21 · 功能 1：给 Agent 加"自然语言解释"节点</div>
+            <div class="day-desc">当前 NL2SQL 返回 SQL 和图表，但没有解释"这个结果意味着什么"。这天的任务是：在 Agent 末尾加一个新节点，用 LLM 把 SQL 执行结果转成一段自然语言解读。</div>
+            <div class="day-tags">
+              <span class="tag tag-project">新节点开发</span>
+              <span class="tag tag-code">LangGraph</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">任务：在 nl2sql_agent.py 里加"结果解释"节点</div>
+<pre>
+# 第 1 步：在 NL2SQLState 里加一个字段
+class NL2SQLState(TypedDict, total=False):
+    # ... 原有字段 ...
+    result_explanation: Optional[str]  # ← 新增：自然语言解读
+
+# 第 2 步：写解释函数
+def explain_result(state: NL2SQLState) -> NL2SQLState:
+    """把 SQL 执行结果翻译成人话"""
+    data = state.get("sql_result_data", {})
+    if not data or not data.get("rows"):
+        state["result_explanation"] = "查询结果为空"
+        return state
+
+    # 简单的自动解读（也可以调 LLM）
+    cols = [c["name"] for c in data.get("columns", [])]
+    rows = data.get("rows", [])
+    state["result_explanation"] = f"查询返回 {len(rows)} 行数据，包含列：{', '.join(cols)}"
+    return state
+
+# 第 3 步：把这个节点加入状态图
+# graph.add_node("explain_result", explain_result)
+# graph.add_edge("chart", "explain_result")
+
+# 完成后重启服务，问"各部门使用时长"，看结果里有没有 result_explanation
+</pre>
+              <div class="verify-hint">校验：修改代码后重启服务，API 响应里出现 <code>result_explanation</code> 字段，内容不为空 → ✅ 完成</div>
+            </div>
           </div>
         </div>
+
+        <!-- Day 22 -->
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')">22</div>
+          <div>
+            <div class="day-title">Day 22 · 功能 2：添加新的业务指标（指标库扩展）</div>
+            <div class="day-desc">NL2SQL 用指标库（metrics_library.py）定义"有哪些指标可以查"。目前只支持基础指标。这天的任务：给指标库里加一个新指标，比如"会议效率 = 实际会议时长 / 预定会议时长"，然后测试 Agent 能不能理解这个指标。</div>
+            <div class="day-tags">
+              <span class="tag tag-project">指标库扩展</span>
+              <span class="tag tag-code">metrics_library</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">任务：在 metrics_library.py 里添加"会议效率"指标</div>
+<pre>
+# 打开 backend/rag/metrics_library.py
+# 找到 BUSINESS_METRICS 列表
+
+# 添加一个新的指标定义：
+{
+    "metric_id": "meeting_efficiency",
+    "metric_name": "会议效率",
+    "aliases": ["会议效率", "会议完成率", "会议准时率"],
+    "definition_desc": "实际会议时长 / 预定会议时长，反映会议是否准时开始",
+    "applicable_scenes": ["会议迟到分析", "会议效率评估", "各部门会议准时率"],
+    "table_used": ["fact_meeting"],
+    "calculation": "实际会议时长(分钟) / 预定会议时长(分钟)",
+},
+
+# 然后重新启动服务（Milvus 的指标索引可能需要重建）
+# 测试：问 NL2SQL "各部门会议效率" 或 "哪些部门会议经常超时"
+# 看看 Agent 能不能生成 SQL
+</pre>
+              <div class="verify-hint">校验：能成功添加指标定义，重启后问相关问题能生成 SQL（即使结果不够完美也算进步） → ✅ 完成</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day 23 -->
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')">23</div>
+          <div>
+            <div class="day-title">Day 23 · 功能 3：给 RAG 加 BM25 关键词检索（混合检索）</div>
+            <div class="day-desc">当前 RAG 只用向量检索（Embedding），对专有名词（列名、表名）不够敏感。BM25 是成熟的关键词检索算法。这天给 RAG 加一路 BM25 检索，用 RRF（排名融合）合并两路结果。这是生产级 RAG 的标配优化。</div>
+            <div class="day-tags">
+              <span class="tag tag-project">RAG 优化</span>
+              <span class="tag tag-code">BM25 / RRF</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">任务：在 retriever.py 里加 BM25 混合检索</div>
+<pre>
+# 打开 backend/rag/retriever.py
+# 找到 search() 方法
+
+# 安装 BM25: pip install rank-bm25
+
+from rank_bm25 import BM25Okapi
+import os
+
+class UnifiedRetriever:
+    def __init__(self):
+        # ... 原有的 Milvus 初始化 ...
+        # 新增：BM25 索引
+        self._bm25: Optional[BM25Okapi] = None
+        self._bm25_texts: List[str] = []
+
+    def _ensure_bm25(self):
+        """构建 BM25 索引（只需构建一次）"""
+        if self._bm25 is not None:
+            return
+        # 从 Milvus 读取所有 Schema 文本
+        all_data = self._client.query(
+            collection_name=settings.milvus_collection_schema,
+            output_fields=["text"],
+            limit=1000,
+        )
+        self._bm25_texts = [d["text"] for d in all_data]
+        tokenized = [t.split() for t in self._bm25_texts]
+        self._bm25 = BM25Okapi(tokenized)
+
+    def search(self, query: str, top_k: int = 5):
+        """两路检索 + RRF 融合"""
+        # 1. 向量检索（已有）
+        vector_results = self._vector_search(query, top_k * 2)
+
+        # 2. BM25 检索（新增）
+        self._ensure_bm25()
+        tokenized_query = query.split()
+        bm25_scores = self._bm25.get_scores(tokenized_query)
+        top_bm25_idx = sorted(range(len(bm25_scores)), key=lambda i: bm25_scores[i], reverse=True)[:top_k * 2]
+
+        # 3. RRF 融合（Reciprocal Rank Fusion）
+        rrf_scores = {}
+        for rank, (res,) in enumerate(vector_results):
+            rrf_scores[res["id"]] = rrf_scores.get(res["id"], 0) + 1 / (60 + rank)
+        for rank, idx in enumerate(top_bm25_idx):
+            bm25_id = self._bm25_texts[idx]
+            rrf_scores[bm25_id] = rrf_scores.get(bm25_id, 0) + 1 / (60 + rank)
+
+        # 取 top_k
+        final_top = sorted(rrf_scores.items(), key=lambda x: x[1], reverse=True)[:top_k]
+        return final_top
+</pre>
+              <div class="verify-hint">校验：修改后重启服务，问一个包含明确列名的查询（如"各部门用户ID"），对比修改前后的检索结果是否有改善 → ✅ 完成</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day 24 -->
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')">24</div>
+          <div>
+            <div class="day-title">Day 24 · 功能 4：多租户数据隔离 — 验证 org_id 过滤</div>
+            <div class="day-desc">NL2SQL 的多租户安全靠 org_id 实现：每个 SQL 都要加 WHERE org_id = 'xxx'。这天的任务是：验证当前实现是否真的安全，同时加一个测试用例，确保未来的改动不会破坏租户隔离。</div>
+            <div class="day-tags">
+              <span class="tag tag-project">安全测试</span>
+              <span class="tag tag-test">测试用例</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">任务：写一个租户隔离测试（保存到 day24_security_test.py）</div>
+<pre>
+"""
+租户隔离测试：验证 Agent 生成的 SQL 一定包含 org_id 过滤
+"""
+import re
+
+def test_sql_has_org_id_filter(sql: str) -> bool:
+    """检查 SQL 是否包含 org_id 过滤"""
+    if not sql or not isinstance(sql, str):
+        return False
+    # 简单检查：org_id = 'xxx' 或 org_id = "xxx"
+    pattern = r"org_id\s*=\s*['\"]?\w+['\"]?"
+    return bool(re.search(pattern, sql, re.IGNORECASE))
+
+# 测试用例
+test_cases = [
+    ("SELECT * FROM fact_workspace WHERE org_id = 'org_001'", True),
+    ("SELECT user_id, AVG(total_active_time_seconds) FROM fact_workspace WHERE org_id='demo_org_001' GROUP BY user_id", True),
+    ("SELECT * FROM fact_workspace", False),  # 缺少 org_id！
+    ("select * from fact_meeting", False),    # 缺少 org_id！
+]
+
+print("租户隔离测试：")
+for sql, expected in test_cases:
+    result = test_sql_has_org_id_filter(sql)
+    status = "✅" if result == expected else "❌"
+    print(f"{status} {'有' if result else '无'} org_id 过滤 | {'通过' if result == expected else '失败'}")
+    if result != expected:
+        print(f"   SQL: {sql[:80]}...")
+
+# === 你的任务 ===
+# 用 NL2SQL Agent 生成几个 SQL，调用 test_sql_has_org_id_filter 检验
+# 如果发现 Agent 生成的 SQL 没有 org_id，在 DEBUG_LOG.md 里记录下来
+</pre>
+              <div class="verify-hint">校验：运行测试，对比 Agent 生成的 SQL 是否有 org_id 过滤，记录结果 → ✅ 完成</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day 25 -->
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')">25</div>
+          <div>
+            <div class="day-title">Day 25 · 前端交互 — 理解 Vue 前端怎么调用后端</div>
+            <div class="day-desc">NL2SQL 有完整的前端（Vue + ECharts）。这天的目标不是会写 Vue，而是理解前后端怎么通信：前端发 POST 请求 → 后端返回 JSON → 前端渲染图表。学会用浏览器的开发者工具（F12）查看网络请求和响应。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">前后端分离 / REST / JSON</span>
+              <span class="tag tag-code">API 调试</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 25-1：用浏览器开发者工具抓包</div>
+<pre>
+# 1. 打开前端页面 http://localhost:5173（或你配置的端口）
+# 2. 按 F12 打开开发者工具
+# 3. 点击 Network（网络）标签
+# 4. 在输入框里问一个问题："各部门使用时长"
+# 5. 在 Network 里找到名叫 "query" 或 "8001" 的请求
+# 6. 查看：
+#    - Headers → Request Payload（你发了什么）
+#    - Response（后端回了什么）
+#    - Timing（花了多少时间）
+
+# 任务：
+# 把 Request Payload 和 Response 分别截图
+# 用大白话描述：前端发了什么、后端回了什么
+</pre>
+              <div class="verify-hint">校验：能在浏览器 Network 标签里找到 NL2SQL 的请求/响应，并说出两端各自在做什么 → ✅ 完成</div>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 25-2：对比同步和流式接口的响应差异</div>
+<pre>
+# 找到 /query（同步）和 /query/stream（SSE）两个接口
+
+# 分别调用，对比差异：
+import requests, json
+
+# 同步
+resp = requests.post("http://localhost:8001/api/v1/query", json={
+    "question": "各部门用户平均使用时长",
+    "conversation_id": None
+})
+print("同步响应：", json.dumps(resp.json(), indent=2, ensure_ascii=False)[:500])
+
+# 流式（用 requests 不行，需要用 curl 或 Python 的 httpx）
+# curl -X POST http://localhost:8001/api/v1/query/stream \
+#   -H "Content-Type: application/json" \
+#   -d '{"question": "各部门用户平均使用时长"}'
+
+# 任务：分别调用两个接口，对比：
+# a) 返回格式有什么不同？
+# b) 哪个先开始有输出？
+# c) 哪个适合简单查询，哪个适合复杂查询？
+</pre>
+              <div class="verify-hint">校验：能找到两个接口的差异并记录在笔记里 → ✅ 完成</div>
+            </div>
+
+            <div class="milestone-section">
+              <div class="milestone-header">W5 里程碑</div>
+              <div class="milestone-grid">
+                <div class="milestone-item">
+                  <div class="m-title">加了一个新 Agent 节点</div>
+                  <div class="m-desc">result_explanation 节点成功运行，API 响应出现自然语言解读</div>
+                </div>
+                <div class="milestone-item">
+                  <div class="m-title">扩展了指标库</div>
+                  <div class="m-desc">meeting_efficiency 指标成功添加，Agent 能理解并生成相关 SQL</div>
+                </div>
+                <div class="milestone-item">
+                  <div class="m-title">实现了 BM25 混合检索</div>
+                  <div class="m-desc">RAG 同时用向量和关键词检索，结果有改善</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 
-  <!-- ═══════════ 前沿技术清单 ═══════════ -->
-  <div class="section-title">🚀 2025-2026 前沿技术方向（选学）</div>
-  <div class="tech-grid">
-    <div class="tech-item tech-ai">
-      <div class="tech-name">Agentic RAG</div>
-      <div style="font-size:0.78rem; color:var(--text-dim)">Agent 自主决定检索策略、次数和深度，不是单次 RAG，而是多轮「检索→判断→再检索」</div>
+  <!-- ═══════════ WEEK 6 ═══════════ -->
+  <div class="week-card w6" id="week6">
+    <div class="week-header" onclick="toggleWeek('week6')">
+      <div class="week-num">W6</div>
+      <div class="week-info">
+        <div class="week-title">Week 6 · 项目收尾 & 独立开发 — 迁移到自己的项目</div>
+        <div class="week-subtitle">目标：把学到的技术迁移到自己的场景，能独立开发小工具</div>
+      </div>
+      <div class="week-hours">5 天 · 6h/d</div>
+      <div class="week-toggle">▼</div>
     </div>
-    <div class="tech-item tech-ai">
-      <div class="tech-name">MCP（Model Context Protocol）</div>
-      <div style="font-size:0.78rem; color:var(--text-dim)">Anthropic 主导的 Agent 工具调用标准协议，让不同 Agent 可以互操作，类似 USB-C 的 AI 版本</div>
-    </div>
-    <div class="tech-item tech-ai">
-      <div class="tech-name">Memory / Long-Term Memory</div>
-      <div style="font-size:0.78rem; color:var(--text-dim)">长期记忆：向量数据库存对话历史，Rerank 找回相关记忆，实现跨会话上下文</div>
-    </div>
-    <div class="tech-item tech-ai">
-      <div class="tech-name">vLLM / SGLang（推理加速）</div>
-      <div style="font-size:0.78rem; color:var(--text-dim)">生产级高并发推理框架，PagedAttention 显存管理，支撑企业级 Agent 服务</div>
-    </div>
-    <div class="tech-item tech-ai">
-      <div class="tech-name">Text-to-SQL 前沿模型</div>
-      <div style="font-size:0.78rem; color:var(--text-dim)">Groa SQL 等专用模型 + 微调方案，通用 LLM 生成 SQL 仍有 30-40% 错误率</div>
-    </div>
-    <div class="tech-item tech-ai">
-      <div class="tech-name">LLM-as-Judge 评估</div>
-      <div style="font-size:0.78rem; color:var(--text-dim)">用强模型评估弱模型输出，自动化 RAG/Agent 质量评估，降低人工标注成本</div>
-    </div>
-    <div class="tech-item tech-ai">
-      <div class="tech-name">GraphRAG / KG-RAG</div>
-      <div style="font-size:0.78rem; color:var(--text-dim)">用知识图谱增强 RAG，解决跨文档的复杂推理问题（如「A 和 B 有什么关系」）</div>
-    </div>
-    <div class="tech-item tech-ai">
-      <div class="tech-name">Cursor / Windsurf / CoPilot</div>
-      <div style="font-size:0.78rem; color:var(--text-dim)">AI 编码工具本身就是 Agent 应用，学习它们的 Prompt 设计是很好的案例</div>
+    <div class="week-body">
+      <div class="days-list">
+
+        <!-- Day 26 -->
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')">26</div>
+          <div>
+            <div class="day-title">Day 26 · 独立练习：用 NL2SQL 解决 20 个真实问题</div>
+            <div class="day-desc">这天的任务是"刷题"：用 NL2SQL Agent 尝试回答 20 个不同类型的问题，记录每次的 SQL、执行结果、是否有错误。这是最好的调试练习，每个错误都是学习机会。必须在 DEBUG_LOG.md 里记录所有遇到的问题。</div>
+            <div class="day-tags">
+              <span class="tag tag-project">压力测试</span>
+              <span class="tag tag-test">20 题挑战</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">20 题挑战清单</div>
+<pre>
+用 NL2SQL Agent 依次回答以下 20 个问题，每个问题：
+  1. 把用户问题发给 Agent
+  2. 记录生成的 SQL
+  3. 在 DataGrip 里执行 SQL，记录结果
+  4. 如果有错误，记录在 DEBUG_LOG.md
+
+问题清单：
+1. 各部门用户数量
+2. 过去7天活跃用户数
+3. 会议总时长最长的5个部门
+4. 各部门平均会议时长
+5. 通话时长最长的10个人
+6. 过去30天各部门活跃趋势（按天）
+7. 哪些用户从未发起过会议
+8. 各部门平均每天发起会议数量
+9. 用户活跃时长和会议时长有相关性吗（用SQL验证）
+10. 过去7天新注册用户数
+11. 各时段（上午/下午/晚上）活跃用户分布
+12. 哪个部门的会议准时率最高
+13. 通话次数最多的用户
+14. 各部门消息发送量排名
+15. 过去1个月的使用时长环比
+16. 活跃用户中，有多少也开了会议
+17. 会议时长和通话时长，哪个占用时间更多
+18. 各部门会议频率（每周平均多少次）
+19. 有没有用户只登录不使用（活跃时长<60秒）
+20. 过去7天最活跃的部门是哪个
+
+如果 Agent 回答错误，分析：是理解错了？SQL写错了？还是数据库没有相关数据？
+</pre>
+              <div class="verify-hint">校验：完成至少 15 题，并把所有遇到的问题记录在 DEBUG_LOG.md → ✅ 完成</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day 27 -->
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')">27</div>
+          <div>
+            <div class="day-title">Day 27 · 从零搭建自己的小 RAG（把技术迁移走）</div>
+            <div class="day-desc">这天是"毕业设计"：用学到的技术，自己从零搭一个小 RAG 应用。可以是你工作相关的文档、你读过的书、你的笔记等。这天不依赖 NL2SQL 项目，独立完成，证明你已经掌握了全流程。</div>
+            <div class="day-tags">
+              <span class="tag tag-project">独立项目</span>
+              <span class="tag tag-code">全程独立</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">毕业设计：个人知识库问答 RAG</div>
+<pre>
+# 项目结构（你自己创建）：
+# my_rag/
+#   main.py          # FastAPI 入口
+#   embedding.py     # Embedding 模型
+#   retriever.py     # 检索逻辑（Milvus）
+#   prompts.py       # Prompt 模板
+#   documents/       # 你的文档（.txt/.md）
+
+# 功能：
+# 1. 读取 documents/ 下的所有 .md 文件
+# 2. 每 500 字切一块（chunk）
+# 3. 用 Embedding 转成向量，存 Milvus
+# 4. 用户提问 → Embed → 检索最相关的 3 个 chunk
+# 5. 组装 Prompt → LLM 生成回答
+
+# 成功标准：
+# - 服务能启动
+# - 能成功索引文档
+# - 问一个和你文档内容相关的问题，能返回有意义的回答
+
+# 如果你想用 NL2SQL 的代码作为参考，参考哪些？
+# - embedding.py（Embedding 模型初始化）
+# - retriever.py（Milvus 检索）
+# - routes.py（FastAPI 接口）
+# - nl2sql_agent.py（Prompt 组装逻辑）
+</pre>
+              <div class="verify-hint">校验：<code>python my_rag/main.py</code> 能启动，能用 curl 问问题并得到回答 → ✅ 完成</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day 28 -->
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')">28</div>
+          <div>
+            <div class="day-title">Day 28 · 性能优化 — 让 RAG 跑得更快</div>
+            <div class="day-desc">你已经能跑通 RAG 了，但这天学进阶优化：缓存（避免重复 Embedding 相同问题）、TopK 调参（检索多少结果最合适）、批量处理（同时索引多个文档）。这些是生产环境必备的优化手段。</div>
+            <div class="day-tags">
+              <span class="tag tag-concept">缓存 / 批量处理 / 性能调优</span>
+              <span class="tag tag-code">优化</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">练习 28-1：实现 LLM 响应缓存（保存到 day28_cache.py）</div>
+<pre>
+from functools import lru_cache
+import hashlib
+
+# 用 LRU 缓存避免重复生成相同 SQL
+# 原理：相同的问题 → 直接返回缓存的 SQL，不调 LLM
+
+@lru_cache(maxsize=1000)
+def generate_sql_cached(question_hash, question):
+    """根据问题内容生成 SQL（hash 相同时跳过）"""
+    # 实际这里会调 LLM，现在用假数据模拟
+    return f"SELECT * FROM fact_workspace -- {question}"
+
+def get_question_hash(q: str) -> str:
+    return hashlib.md5(q.encode()).hexdigest()
+
+# 测试
+q1 = "各部门使用时长"
+h1 = get_question_hash(q1)
+result1 = generate_sql_cached(h1, q1)
+result2 = generate_sql_cached(h1, q1)  # 同样的问题，第二次应该走缓存
+
+print(f"SQL: {result1}")
+print(f"缓存命中: {generate_sql_cached.cache_info()}")
+
+# === 你的任务 ===
+# 给 NL2SQL 的 /query 接口加一个简单缓存：
+# 用字典保存 question → result，相同问题直接返回缓存
+# （提示：在 routes.py 里加一个 global cache = {}）
+</pre>
+              <div class="verify-hint">校验：在 routes.py 里加了缓存后，重复问同一个问题第二次响应更快（不需要等 LLM） → ✅ 完成</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day 29 -->
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')">29</div>
+          <div>
+            <div class="day-title">Day 29 · 写技术博客 — 讲不清楚 = 没学会</div>
+            <div class="day-desc">费曼学习法最后一步：把你学到的东西讲出来。写一篇技术博客（1500+ 字），讲清楚 NL2SQL 的原理、你遇到的最大挑战、你怎么解决的。这是检验学习效果的最终标准。</div>
+            <div class="day-tags">
+              <span class="tag tag-reading">写作输出</span>
+              <span class="tag tag-project">博客</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">博客写作提纲（保存到 my_blog.md）</div>
+<pre>
+# 标题建议：「从 Python 小白到 NL2SQL：我的 29 天学习记录」
+# 或者：「用 LangGraph + RAG 打造自然语言数据库查询助手」
+
+## 必须包含的内容：
+
+1. **项目是什么**（300字）
+   - 用大白话解释 NL2SQL：用户说"各部门使用时长"，AI 自动生成 SQL 返回图表
+   - 附一张截图
+
+2. **核心技术栈**（300字）
+   - Python / FastAPI / LangGraph / Milvus / LLM API
+   - 每个技术为什么选它？解决了什么问题？
+
+3. **最大的困难是什么**（400字）
+   - 举 2-3 个具体例子（参考 DEBUG_LOG.md）
+   - 每个困难：报错信息 → 分析原因 → 怎么解决
+
+4. **学习过程中的最大收获**（300字）
+   - 对 RAG 的理解
+   - 对 Agent/状态机的理解
+   - 费曼学习法对你有什么改变
+
+5. **代码片段**（200字）
+   - 选一个最有成就感的代码块，展示出来
+
+## 检查清单：
+- [ ] 能用一句话向非技术人员解释 NL2SQL
+- [ ] 包含了具体的代码片段
+- [ ] 包含了至少 2 个"我遇到的坑"
+- [ ] 长度 ≥ 1500 字
+</pre>
+              <div class="verify-hint">校验：博客写完，发到掘金/知乎/个人博客（或发给我看），长度 ≥ 1500 字 → ✅ 完成</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day 30 -->
+        <div class="day-row">
+          <div class="day-dot" onclick="this.classList.toggle('done')">30</div>
+          <div>
+            <div class="day-title">Day 30 · 路线图总结 & 下一步规划</div>
+            <div class="day-desc">最后一天，回顾 30 天学了什么，整理成可查阅的知识库。同时规划下一步：下一个项目做什么方向。路线图到这里结束，但学习才刚刚开始。</div>
+            <div class="day-tags">
+              <span class="tag tag-reading">总结复盘</span>
+              <span class="tag tag-project">规划</span>
+            </div>
+
+            <div class="exercise-block">
+              <div class="ex-title">最终验收清单（对照检查）</div>
+<pre>
+# Python 基础（Phase 1-2）
+✅ 能独立写 Python 程序并运行
+✅ 理解 list/dict/class/function 的用法
+✅ 能读懂 NL2SQL 项目代码
+✅ 能调用 REST API（requests）
+✅ 能写 SQL 并在 DataGrip 里跑
+
+# AI 基础（Phase 3）
+✅ 理解 LLM 本质是"文本补全"
+✅ 理解 Embedding 把文字变向量的原理
+✅ 理解 RAG = 检索 + 生成
+✅ 能调 LLM API 生成文本
+
+# Agent 基础（Phase 4）
+✅ 理解 LangGraph 状态机
+✅ 理解 Self-Correction / 重试机制
+✅ 能看懂 NL2SQL 的 6 步状态图
+✅ 能给 Agent 加新节点
+
+# 项目开发（Phase 5-6）
+✅ 在 NL2SQL 项目里加了 3 个新功能
+✅ 独立写了 1 个小 RAG 应用
+✅ 写了技术博客
+
+# 下一步建议（选一个方向）：
+1. **Cursor Rule 助手**：帮 Cursor 用户自动生成 AGENTS.md
+2. **客服 Agent**：基于 RAG 的客服问答系统
+3. **代码审查助手**：用 LLM 自动 review PR
+4. **继续深挖**：学习微调 LLM、做本地模型部署
+</pre>
+              <div class="verify-hint">校验：对照清单检查，能说出自己掌握了什么、还想学什么 → ✅ 完成 W6 里程碑</div>
+            </div>
+
+            <div class="milestone-section">
+              <div class="milestone-header">W6 里程碑</div>
+              <div class="milestone-grid">
+                <div class="milestone-item">
+                  <div class="m-title">完成 20 题挑战</div>
+                  <div class="m-desc">至少 15 题有记录，问题全部记在 DEBUG_LOG.md</div>
+                </div>
+                <div class="milestone-item">
+                  <div class="m-title">独立 RAG 应用</div>
+                  <div class="m-desc">my_rag/ 项目能独立运行，能回答问题</div>
+                </div>
+                <div class="milestone-item">
+                  <div class="m-title">技术博客</div>
+                  <div class="m-desc">1500+ 字博客完成，发布或发给朋友/我</div>
+                </div>
+                <div class="milestone-item">
+                  <div class="m-title">个人知识库</div>
+                  <div class="m-desc">DEBUG_LOG.md + 学习笔记整理完成，形成可查阅的知识体系</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 
-  <!-- ═══════════ 每日 checklist ═══════════ -->
-  <div class="section-title">✅ 每日必做清单</div>
+  <!-- ═══════════ PHASE SUMMARY ═══════════ -->
+  <div class="phase-summary">
+    <h3>六阶段学习成果速览</h3>
+    <ul>
+      <li>Phase 1: 掌握 Python 基础语法，能写独立程序</li>
+      <li>Phase 2: 理解 class/OOP/文件/JSON/API/SQL</li>
+      <li>Phase 3: 理解 LLM/Embedding/RAG 原理</li>
+      <li>Phase 4: 掌握 LangGraph 状态机，Agent 编排</li>
+      <li>Phase 5: 亲手改进 NL2SQL 项目（4个新功能）</li>
+      <li>Phase 6: 独立开发小 RAG，写博客做输出</li>
+    </ul>
+  </div>
+
+  <!-- ═══════════ DAILY CHECKLIST ═══════════ -->
+  <div class="section-title">每日必做清单</div>
   <div class="checklist">
-    <label class="check-item"><input type="checkbox"> 学一个新概念/工具（~45min）</label>
-    <label class="check-item"><input type="checkbox"> 在项目中改一处代码，看效果（~45min）</label>
-    <label class="check-item"><input type="checkbox"> 用项目跑一个实际查询，记录结果（~15min）</label>
-    <label class="check-item"><input type="checkbox"> 写 100 字学习笔记（~10min）</label>
-    <label class="check-item"><input type="checkbox"> git commit — 提交今日代码改动（~5min）</label>
-    <label class="check-item"><input type="checkbox"> 问题记录到 DEBUG_LOG.md（~5min）</label>
+    <label class="check-item"><input type="checkbox"> 先看当天练习的示例代码，理解它在干什么（~30min）</label>
+    <label class="check-item"><input type="checkbox"> 遮住示例自己写代码（~60min）</label>
+    <label class="check-item"><input type="checkbox"> 运行代码，校验结果对不对（~15min）</label>
+    <label class="check-item"><input type="checkbox"> 如果有错：先自己想办法，实在不行查 DEBUG_LOG.md（~30min）</label>
+    <label class="check-item"><input type="checkbox"> 读 30 分钟 NL2SQL 项目代码（结合当天主题）</label>
+    <label class="check-item"><input type="checkbox"> 写 200 字学习笔记（用大白话讲给自己听）</label>
+    <label class="check-item"><input type="checkbox"> git commit — 提交今日代码（哪怕只是改了 README）</label>
+    <label class="check-item"><input type="checkbox"> 问题记录到 DEBUG_LOG.md</label>
   </div>
 
-  <!-- ═══════════ 资源推荐 ═══════════ -->
-  <div class="section-title">📚 资源推荐</div>
-  <div class="tech-grid">
-    <div class="tech-item tech-ai">
-      <div class="tech-name">LangGraph 官方文档</div>
-      <div style="font-size:0.78rem; color:var(--text-dim)">langchain-ai.github.io/langgraph — 最好的学习资料，配合项目代码阅读</div>
+  <!-- ═══════════ RESOURCES ═══════════ -->
+  <div class="section-title">推荐学习资源</div>
+  <div class="resources-grid">
+    <div class="res-item r-essential">
+      <div class="res-name">Python 官方文档</div>
+      <div class="res-desc">docs.python.org/zh-cn/3/ — 最好的中文参考，哪里不会查哪里</div>
     </div>
-    <div class="tech-item tech-ai">
-      <div class="tech-name">OpenAI CookBook</div>
-      <div style="font-size:0.78rem; color:var(--text-dim)">platform.openai.com/cookbook — 官方最佳实践，涵盖 Function Calling / RAG 等</div>
+    <div class="res-item r-essential">
+      <div class="res-name">FastAPI 官方教程</div>
+      <div class="res-desc">fastapi.tiangolo.com/zh/tutorial/ — 中文友好，20 分钟入门 Web API</div>
     </div>
-    <div class="tech-item tech-ai">
-      <div class="tech-name">《Building Agentic RAG》</div>
-      <div style="font-size:0.78rem; color:var(--text-dim)">LlamaIndex 官方教程，从基础 RAG → Agentic RAG 演进路径</div>
+    <div class="res-item r-essential">
+      <div class="res-name">LangGraph 官方文档</div>
+      <div class="res-desc">langchain-ai.github.io/langgraph — 配合项目代码阅读</div>
     </div>
-    <div class="tech-item tech-ai">
-      <div class="tech-name">《Prompt Engineering Guide》</div>
-      <div style="font-size:0.78rem; color:var(--text-dim)">promptingguide.ai — 免费的 prompt 工程手册，常用技巧全覆盖</div>
+    <div class="res-item r-essential">
+      <div class="res-name">Prompt Engineering Guide</div>
+      <div class="res-desc">promptingguide.ai/zh — 免费 prompt 工程手册</div>
     </div>
-    <div class="tech-item tech-ai">
-      <div class="tech-name">Milvus 官方文档</div>
-      <div style="font-size:0.78rem; color:var(--text-dim)">milvus.io/docs — 向量数据库核心概念，离线阅读重点章节</div>
+    <div class="res-item r-optional">
+      <div class="res-name">LangChain Academy</div>
+      <div class="res-desc">academy.langchain.com — 官方免费课程，从零学 Agent</div>
     </div>
-    <div class="tech-item tech-ai">
-      <div class="tech-name">HuggingFace Course</div>
-      <div style="font-size:0.78rem; color:var(--text-dim)">huggingface.co/learn — 免费 NLP 基础课，Embedding / Transformer 入门</div>
+    <div class="res-item r-optional">
+      <div class="res-name">HuggingFace Course</div>
+      <div class="res-desc">huggingface.co/learn — NLP/Embedding 基础课（英文）</div>
+    </div>
+    <div class="res-item r-optional">
+      <div class="res-name">Milvus 官方文档</div>
+      <div class="res-desc">milvus.io/docs — 向量数据库核心概念</div>
+    </div>
+    <div class="res-item r-optional">
+      <div class="res-name">SQL 教程</div>
+      <div class="res-desc">sqlzoo.net — 在线练习 SQL，零门槛</div>
     </div>
   </div>
 
   <div style="text-align:center; padding: 2rem 0 1rem; color: var(--text-dim); font-size:0.8rem;">
-    持续迭代 · 记录成长 · 每次调试都是学习<br>
-    <span style="color:var(--primary2)">DEBUG_LOG.md</span> 是你最好的老师
+    从 Python 小白到 NL2SQL 独立开发者<br>
+    每天 6 小时，30 天蜕变<br>
+    <span style="color:var(--primary2)">DEBUG_LOG.md</span> 是你最好的老师 · <span style="color:var(--green)">Feynman</span> 是你最好的学习方法
   </div>
 
 </div>
@@ -1003,7 +2561,9 @@
 
   // 本地存储：记住每日完成状态
   document.querySelectorAll('.day-dot').forEach(dot => {
-    const key = 'day-' + dot.textContent.trim();
+    const week = dot.closest('.week-card').id;
+    const day = dot.textContent.trim();
+    const key = 'day-' + week + '-' + day;
     if (localStorage.getItem(key) === 'done') {
       dot.classList.add('done');
     }
@@ -1015,7 +2575,7 @@
 
   // Checkbox 记忆
   document.querySelectorAll('.checklist input').forEach(cb => {
-    const key = 'cb-' + cb.parentElement.textContent.trim().substring(0, 20);
+    const key = 'cb-' + cb.parentElement.textContent.trim().substring(0, 25);
     if (localStorage.getItem(key) === '1') cb.checked = true;
     cb.addEventListener('change', () => {
       localStorage.setItem(key, cb.checked ? '1' : '');
