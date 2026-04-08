@@ -3,47 +3,43 @@
 @tailwind utilities;
 
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 body {
-  font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  background-color: #f8fafc;
-  color: #1e293b;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background-color: #0f1117;
+  color: #e2e8f0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
 }
 
-/* 自定义滚动条 */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #1a1d27; }
+::-webkit-scrollbar-thumb { background: #2d3348; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #7c6af7; }
 
-/* 步骤动画 */
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+.fade-enter-active, .fade-leave-active { transition: opacity 0.3s; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
 
-.step-enter {
-  animation: slideIn 0.3s ease-out;
+@layer utilities {
+  .text-dark { color: #0f1117; }
+  .bg-dark { background-color: #0f1117; }
+  .bg-surface { background-color: #1a1d27; }
+  .bg-surface2 { background-color: #13161f; }
+  .border-border { border-color: #2d3348; }
+  .text-primary { color: #7c6af7; }
+  .text-green { color: #34d399; }
+  .text-orange { color: #fb923c; }
+  .text-yellow { color: #fbbf24; }
+  .text-blue { color: #60a5fa; }
+  .text-red { color: #f87171; }
+  .bg-primary { background-color: #7c6af7; }
+  .bg-green { background-color: #34d399; }
+  .bg-orange { background-color: #fb923c; }
+  .border-primary { border-color: #7c6af7; }
+  .border-green { border-color: #34d399; }
+  .border-orange { border-color: #fb923c; }
+  .border-red { border-color: #f87171; }
 }

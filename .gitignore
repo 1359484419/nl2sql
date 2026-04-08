@@ -16,5 +16,11 @@ dist/
 .idea/
 .DS_Store
 
+# Milvus / ChromaDB runtime data
+data/milvus/
+data/chromadb/
+data/db/
+backend/data/
+
 # Environment
 .env

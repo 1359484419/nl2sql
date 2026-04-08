@@ -26,7 +26,8 @@ numpy==1.26.4
 
 # ========== 数据库连接 ==========
 # pymysql==1.1.1  # MySQL 驱动，学习环境不需要
-psycopg[binary]==3.2.3
+psycopg[binary]==3.2.10
+asyncpg==0.30.0
 sqlalchemy==2.0.35
 # sqlite3（Python 内置，无需安装）
 
@@ -40,6 +41,9 @@ psutil==6.0.0
 rank-bm25==0.2.2
 beautifulsoup4==4.12.3
 lxml==5.3.0
+
+# ========== Learning Tracker（异步 PostgreSQL） ==========
+asyncpg==0.30.0
 
 # ========== 前端（Node.js 项目） ==========
 # vue@3, vite@5, echarts@5, typescript 等通过 npm install

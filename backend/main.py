@@ -1,20 +1,33 @@
 """
-NL2SQL BI Agent — FastAPI 主程序入口
+NL2SQL BI Agent + Learning Tracker — FastAPI 主程序入口
 """
 
 import uvicorn
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.config import settings
-from backend.api.routes import router
+from backend.api.routes import router as nl2sql_router
+from backend.learning_tracker.api.routes import router as tracker_router
+from backend.learning_tracker.core.database import engine, Base
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # 启动时创建学习追踪系统的所有表
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
+
 
 app = FastAPI(
-    title="NL2SQL BI Agent",
-    description="基于自然语言的 BI 查询系统 — NL2SQL + RAG + 可视化",
+    title="NL2SQL BI Agent + Learning Tracker",
+    description="NL2SQL 查询系统 + AI 学习进度打卡系统",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 # CORS 配置
@@ -26,19 +39,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 注册路由
-app.include_router(router)
+# 注册 NL2SQL 路由（/api/v1/*）
+app.include_router(nl2sql_router)
+
+# 注册学习打卡路由（/api/v1/learning/*）
+app.include_router(tracker_router)
 
 
-@app.on_event("startup")
-async def startup_event():
-    print("=" * 60)
-    print("  NL2SQL BI Agent 启动中...")
-    print(f"  LLM: {'Ollama ' + settings.ollama_model if settings.use_ollama else 'OpenAI ' + settings.openai_model}")
-    print(f"  向量数据库: Milvus Lite (本地文件模式)")
-    print(f"  业务数据库: postgresql://{settings.db_user}@{settings.db_host}:{settings.db_port}/{settings.db_name}")
-    print(f"  访问地址: http://{settings.api_host}:{settings.api_port}")
-    print("=" * 60)
+@app.get("/health")
+async def health():
+    return {"status": "ok", "nl2sql": "ok", "learning_tracker": "ok"}
 
 
 if __name__ == "__main__":
